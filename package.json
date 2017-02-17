@@ -10,6 +10,7 @@
     "assert": "1.4.1",
     "stream-browserify": "2.0.1",
     "websocket-stream": "3.3.3",
+    "url": "0.11.0",
     "setimmediate": "1.0.5 "
   },
   "devDependencies": {
