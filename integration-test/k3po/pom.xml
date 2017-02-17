@@ -1,0 +1,41 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.reaktivity</groupId>
+  <artifactId>nukleus-http2-test</artifactId>
+  <packaging>pom</packaging>
+  <version>develop-SNAPSHOT</version>
+  <name>Runs K3PO with dependencies for HTTP 2 Spec</name>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.kaazing</groupId>
+        <artifactId>k3po-maven-plugin</artifactId>
+        <version>3.0.0-alpha-54</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>start</goal>
+              <goal>stop</goal>
+            </goals>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.kaazing</groupId>
+            <artifactId>specification.ws</artifactId>
+            <version>3.0.0-alpha-54</version>
+          </dependency>
+
+        </dependencies>
+        <!-- TODO add dependencies for needed spec projects -->
+      </plugin>
+    </plugins>
+  </build>
+
+
+</project>

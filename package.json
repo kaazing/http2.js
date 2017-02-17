@@ -6,15 +6,26 @@
   "engines" : {
     "node" : ">=0.12.0"
   },
+  "dependencies": {
+   "readable-stream": "2.2.2"
+  },
   "devDependencies": {
+    "k3po-exec": "0.0.x",
+    "k3po-mocha.js": "0.0.x",
     "istanbul": "*",
     "chai": "*",
     "mocha": "*",
     "docco": "*",
+    "websocket": "1.0.24",
+    "websocket-stream": "3.3.3",
+    "browserify": "14.0.0 ",
     "bunyan": "*"
   },
   "scripts": {
     "test": "istanbul test _mocha -- --reporter spec --slow 500 --timeout 15000",
+    "preintegration-test": "node ./node_modules/k3po-exec/k3po-exec.js --pom ./integration-test/k3po/pom.xml --log ./builds/integration-test/k3po-test.log --pidFile ./builds/integration-test/k3po-test.pid start",
+    "integration-test": "mocha --ui /Users/David/Documents/projects/javascript-k3po/k3po-mocha.js/k3po-ui.js integration-test/k3po-test.js",
+    "postintegration-test": "node ./node_modules/k3po-exec/k3po-exec.js --pom ./integration-test/k3po/pom.xml --log ./builds/integration-test/k3po-test.log --pidFile ./builds/integration-test/k3po-test.pid",
     "doc": "docco lib/* --output doc --layout parallel --template root.jst --css doc/docco.css && docco lib/protocol/* --output doc/protocol --layout parallel --template protocol.jst --css doc/docco.css"
   },
   "repository": {
