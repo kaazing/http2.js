@@ -10,10 +10,11 @@ describe('http2-cache', function () {
 
     it('http2.get.over.ws', function (done) {
         // DPW TODO proper handling of URL
-        http2ws.get({'host': 'localhost', 'port': 8080, 'transport':'ws://localhost:8080/echo'}, function(response){
-            console.log(response);
-            done();
-        })
+        // http2ws.get({'host': 'localhost', 'port': 8080, 'transport':'ws://localhost:8080/echo'}, function(response){
+        //     console.log(response);
+        //     done();
+        // })
+        console.log("waiting for ever !!!");
     });
 
 });

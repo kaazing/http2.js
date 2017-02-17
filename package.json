@@ -3,11 +3,13 @@
   "version": "3.3.6",
   "description": "An HTTP/2 client and server implementation",
   "main": "lib/index.js",
-  "engines" : {
-    "node" : ">=0.12.0"
+  "engines": {
+    "node": ">=0.12.0"
   },
   "dependencies": {
-   "readable-stream": "2.2.2"
+    "readable-stream": "2.2.2",
+    "websocket-stream": "3.3.3",
+    "setimmediate": "1.0.5 "
   },
   "devDependencies": {
     "k3po-exec": "0.0.x",
@@ -16,8 +18,6 @@
     "chai": "*",
     "mocha": "*",
     "docco": "*",
-    "websocket": "1.0.24",
-    "websocket-stream": "3.3.3",
     "browserify": "14.0.0 ",
     "bunyan": "*"
   },
