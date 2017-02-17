@@ -7,6 +7,7 @@
     "node": ">=0.12.0"
   },
   "dependencies": {
+    "readable-stream": "breaks at 2.1.5, but websocket stream needs 2.1.5",
     "readable-stream": "2.2.2",
     "websocket-stream": "3.3.3",
     "setimmediate": "1.0.5 "
