@@ -7,6 +7,8 @@ var net = require('net');
 
 var http2 = require('../lib/http');
 var https = require('https');
+var http = require('http');
+var websocket = require('websocket-stream');
 
 var serverOptions = {
   key: fs.readFileSync(path.join(__dirname, '../example/localhost.key')),
@@ -390,6 +392,71 @@ describe('http.js', function() {
         });
       });
     });
+    // DPW ADDED -- TODO Move below to best section
+      describe('request over plain WS', function() {
+          it.skip('should work as expected', function(done) {
+              var path = '/x';
+              var message = 'Hello world';
+
+              var server = http2.raw.createServer({
+                  log: util.serverLog,
+                  transport: function(options){
+                    var server = http.createServer(options);
+                    var wss = websocket.createServer({
+                        server: server
+                    });
+                    return wss;  // HTTP2 over plain TCP
+                  }
+              }, function(request, response) {
+                  expect(request.url).to.equal(path);
+                  response.end(message);
+              });
+
+              server.listen(1237, function() {
+                  var request = http2.raw.request({
+                      plain: true,
+                      host: 'localhost',
+                      port: 1237,
+                      path: path,
+                      transport: function(){
+                        console.log(ok);
+                      }
+                  }, function(response) {
+                      response.on('data', function(data) {
+                          expect(data.toString()).to.equal(message);
+                          server.close();
+                          done();
+                      });
+                  });
+                  request.end();
+              });
+          });
+      });
+      // describe('get over plain TCP', function() {
+      //     it('should work as expected', function(done) {
+      //         var path = '/x';
+      //         var message = 'Hello world';
+      //
+      //         var server = http2.raw.createServer({
+      //             log: util.serverLog
+      //         }, function(request, response) {
+      //             expect(request.url).to.equal(path);
+      //             response.end(message);
+      //         });
+      //
+      //         server.listen(1237, function() {
+      //             var request = http2.raw.get('http://localhost:1237/x', function(response) {
+      //                 response.on('data', function(data) {
+      //                     expect(data.toString()).to.equal(message);
+      //                     server.close();
+      //                     done();
+      //                 });
+      //             });
+      //             request.end();
+      //         });
+      //     });
+      // });
+    // DPW ADDED STOPPED -- TODO Move above to best section
     describe('request over plain TCP', function() {
       it('should work as expected', function(done) {
         var path = '/x';

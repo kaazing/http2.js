@@ -1,5 +1,6 @@
 var expect = require('chai').expect;
 var util = require('./util');
+var timers = require('timers');
 
 var stream = require('../lib/protocol/stream');
 var Stream = stream.Stream;
@@ -97,7 +98,7 @@ function execute_sequence(stream, sequence, done) {
     done();
   }
 
-  setImmediate(execute.bind(null, check));
+  timers.setImmediate(execute.bind(null, check));
 }
 
 var example_frames = [
