@@ -394,32 +394,27 @@ describe('http.js', function() {
     });
     // DPW ADDED -- TODO Move below to best section
       describe('request over plain WS', function() {
-          it.skip('should work as expected', function(done) {
+          it('should work as expected', function(done) {
               var path = '/x';
               var message = 'Hello world';
+              var portnum = 1239;
 
               var server = http2.raw.createServer({
                   log: util.serverLog,
-                  transport: function(options){
-                    var server = http.createServer(options);
-                    var wss = websocket.createServer({
-                        server: server
-                    });
-                    return wss;  // HTTP2 over plain TCP
-                  }
+                  transport: true
               }, function(request, response) {
                   expect(request.url).to.equal(path);
                   response.end(message);
               });
 
-              server.listen(1237, function() {
+              server.listen(portnum, function() {
                   var request = http2.raw.request({
                       plain: true,
                       host: 'localhost',
-                      port: 1237,
+                      port: portnum,
                       path: path,
                       transport: function(){
-                        console.log(ok);
+                          return websocket('ws://localhost:' + portnum);
                       }
                   }, function(response) {
                       response.on('data', function(data) {
@@ -432,30 +427,33 @@ describe('http.js', function() {
               });
           });
       });
-      // describe('get over plain TCP', function() {
-      //     it('should work as expected', function(done) {
-      //         var path = '/x';
-      //         var message = 'Hello world';
-      //
-      //         var server = http2.raw.createServer({
-      //             log: util.serverLog
-      //         }, function(request, response) {
-      //             expect(request.url).to.equal(path);
-      //             response.end(message);
-      //         });
-      //
-      //         server.listen(1237, function() {
-      //             var request = http2.raw.get('http://localhost:1237/x', function(response) {
-      //                 response.on('data', function(data) {
-      //                     expect(data.toString()).to.equal(message);
-      //                     server.close();
-      //                     done();
-      //                 });
-      //             });
-      //             request.end();
-      //         });
-      //     });
-      // });
+      describe('get over plain WS', function() {
+          it('should work as expected', function(done) {
+              var path = '/x';
+              var message = 'Hello world';
+
+              var server = http2.raw.createServer({
+                  log: util.serverLog,
+                  transport: true
+              }, function(request, response) {
+                  expect(request.url).to.equal(path);
+                  response.end(message);
+              });
+
+              server.listen(1239, function() {
+                  var request = http2.raw.get({path : path, transport: function(){
+                      return websocket('ws://localhost:' + 1239);
+                  }}, function(response) {
+                      response.on('data', function(data) {
+                          expect(data.toString()).to.equal(message);
+                          server.close();
+                          done();
+                      });
+                  });
+                  request.end();
+              });
+          });
+      });
     // DPW ADDED STOPPED -- TODO Move above to best section
     describe('request over plain TCP', function() {
       it('should work as expected', function(done) {
