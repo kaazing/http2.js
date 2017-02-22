@@ -392,69 +392,67 @@ describe('http.js', function() {
         });
       });
     });
-    // DPW ADDED -- TODO Move below to best section
-      describe('request over plain WS', function() {
-          it('should work as expected', function(done) {
-              var path = '/x';
-              var message = 'Hello world';
-              var portnum = 1239;
+    describe('request over plain WS', function() {
+        it('should work as expected', function(done) {
+            var path = '/x';
+            var message = 'Hello world';
+            var portnum = 1239;
 
-              var server = http2.raw.createServer({
-                  log: util.serverLog,
-                  transport: true
-              }, function(request, response) {
-                  expect(request.url).to.equal(path);
-                  response.end(message);
-              });
+            var server = http2.raw.createServer({
+                log: util.serverLog,
+                transport: "websocket"
+            }, function(request, response) {
+                expect(request.url).to.equal(path);
+                response.end(message);
+            });
 
-              server.listen(portnum, function() {
-                  var request = http2.raw.request({
-                      plain: true,
-                      host: 'localhost',
-                      port: portnum,
-                      path: path,
-                      transport: function(){
-                          return websocket('ws://localhost:' + portnum);
-                      }
-                  }, function(response) {
-                      response.on('data', function(data) {
-                          expect(data.toString()).to.equal(message);
-                          server.close();
-                          done();
-                      });
-                  });
-                  request.end();
-              });
-          });
-      });
-      describe('get over plain WS', function() {
-          it('should work as expected', function(done) {
-              var path = '/x';
-              var message = 'Hello world';
+            server.listen(portnum, function() {
+                var request = http2.raw.request({
+                    plain: true,
+                    host: 'localhost',
+                    port: portnum,
+                    path: path,
+                    transport: function(){
+                        return websocket('ws://localhost:' + portnum);
+                    }
+                }, function(response) {
+                    response.on('data', function(data) {
+                        expect(data.toString()).to.equal(message);
+                        server.close();
+                        done();
+                    });
+                });
+                request.end();
+            });
+        });
+    });
+    describe('get over plain WS', function() {
+        it('should work as expected', function(done) {
+            var path = '/x';
+            var message = 'Hello world';
 
-              var server = http2.raw.createServer({
-                  log: util.serverLog,
-                  transport: true
-              }, function(request, response) {
-                  expect(request.url).to.equal(path);
-                  response.end(message);
-              });
+            var server = http2.raw.createServer({
+                log: util.serverLog,
+                transport: "websocket"
+            }, function(request, response) {
+                expect(request.url).to.equal(path);
+                response.end(message);
+            });
 
-              server.listen(1239, function() {
-                  var request = http2.raw.get({path : path, transport: function(){
-                      return websocket('ws://localhost:' + 1239);
-                  }}, function(response) {
-                      response.on('data', function(data) {
-                          expect(data.toString()).to.equal(message);
-                          server.close();
-                          done();
-                      });
-                  });
-                  request.end();
-              });
-          });
-      });
-    // DPW ADDED STOPPED -- TODO Move above to best section
+            server.listen(1243, function() {
+                var request = http2.raw.get({path : path, transport: function(){
+                    return websocket('ws://localhost:' + 1243);
+                }}, function(response) {
+                    response.on('data', function(data) {
+                        expect(data.toString()).to.equal(message);
+                        server.close();
+                        done();
+                    });
+                });
+                request.end();
+            });
+        });
+    });
     describe('request over plain TCP', function() {
       it('should work as expected', function(done) {
         var path = '/x';
