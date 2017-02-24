@@ -392,7 +392,7 @@ describe('http.js', function() {
         });
       });
     });
-    describe('request over plain WS', function() {
+    describe('request over generic plain transport (example WebSocket)', function() {
         it('should work as expected', function(done) {
             var path = '/x';
             var message = 'Hello world';
@@ -400,12 +400,19 @@ describe('http.js', function() {
 
             var server = http2.raw.createServer({
                 log: util.serverLog,
-                transport: "websocket"
+                transport: function(options, start){
+                    var httpServer = http.createServer();
+                    options.server = httpServer;
+                    var res = websocket.createServer(options, start);
+                    res.listen = function(options, cb){
+                        httpServer.listen(options, cb);
+                    };
+                    return res;
+                }
             }, function(request, response) {
                 expect(request.url).to.equal(path);
                 response.end(message);
             });
-
             server.listen(portnum, function() {
                 var request = http2.raw.request({
                     plain: true,
@@ -426,14 +433,22 @@ describe('http.js', function() {
             });
         });
     });
-    describe('get over plain WS', function() {
+    describe('get over plain generic transport (example WebSocket)', function() {
         it('should work as expected', function(done) {
             var path = '/x';
             var message = 'Hello world';
 
             var server = http2.raw.createServer({
                 log: util.serverLog,
-                transport: "websocket"
+                transport: function(options, start){
+                    var httpServer = http.createServer();
+                    options.server = httpServer;
+                    var res = websocket.createServer(options, start);
+                    res.listen = function(options, cb){
+                        httpServer.listen(options, cb);
+                    };
+                    return res;
+                }
             }, function(request, response) {
                 expect(request.url).to.equal(path);
                 response.end(message);
