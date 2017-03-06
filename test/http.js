@@ -407,6 +407,9 @@ describe('http.js', function() {
                     res.listen = function(options, cb){
                         httpServer.listen(options, cb);
                     };
+                    res.close = function (cb) {
+                        httpServer.close(cb);
+                    };
                     return res;
                 }
             }, function(request, response) {
@@ -433,6 +436,7 @@ describe('http.js', function() {
             });
         });
     });
+
     describe('get over plain generic transport (example WebSocket)', function() {
         it('should work as expected', function(done) {
             var path = '/x';
@@ -447,6 +451,9 @@ describe('http.js', function() {
                     res.listen = function(options, cb){
                         httpServer.listen(options, cb);
                     };
+                    res.close = function (cb) {
+                        httpServer.close(cb);
+                    };
                     return res;
                 }
             }, function(request, response) {
@@ -454,9 +461,9 @@ describe('http.js', function() {
                 response.end(message);
             });
 
-            server.listen(1243, function() {
+            server.listen(1239, function() {
                 var request = http2.raw.get({path : path, transport: function(){
-                    return websocket('ws://localhost:' + 1243);
+                    return websocket('ws://localhost:' + 1239);
                 }}, function(response) {
                     response.on('data', function(data) {
                         expect(data.toString()).to.equal(message);
@@ -468,6 +475,44 @@ describe('http.js', function() {
             });
         });
     });
+      describe('get over plain generic transport (example WebSocket) 2', function() {
+          it('should work as expected', function(done) {
+              var path = '/x';
+              var message = 'Hello world';
+
+              var server = http2.raw.createServer({
+                  log: util.serverLog,
+                  transport: function(options, start){
+                      var httpServer = http.createServer();
+                      options.server = httpServer;
+                      var res = websocket.createServer(options, start);
+                      res.listen = function(options, cb){
+                          httpServer.listen(options, cb);
+                      };
+                      res.close = function (cb) {
+                          httpServer.close(cb);
+                      };
+                      return res;
+                  }
+              }, function(request, response) {
+                  expect(request.url).to.equal(path);
+                  response.end(message);
+              });
+
+              server.listen(1239, function() {
+                  var request = http2.raw.get({path : path, transport: function(){
+                      return websocket('ws://localhost:' + 1239);
+                  }}, function(response) {
+                      response.on('data', function(data) {
+                          expect(data.toString()).to.equal(message);
+                          server.close();
+                          done();
+                      });
+                  });
+                  request.end();
+              });
+          });
+      });
     describe('request over plain TCP', function() {
       it('should work as expected', function(done) {
         var path = '/x';
