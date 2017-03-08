@@ -422,7 +422,7 @@ describe('http.js', function() {
                     host: 'localhost',
                     port: portnum,
                     path: path,
-                    transport: function(){
+                    createConnection: function(){
                         return websocket('ws://localhost:' + portnum);
                     }
                 }, function(response) {
@@ -462,7 +462,7 @@ describe('http.js', function() {
             });
 
             server.listen(1239, function() {
-                var request = http2.raw.get({path : path, transport: function(){
+                var request = http2.raw.get({path : path, createConnection: function(){
                     return websocket('ws://localhost:' + 1239);
                 }}, function(response) {
                     response.on('data', function(data) {
