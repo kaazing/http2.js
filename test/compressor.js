@@ -35,7 +35,7 @@ var test_strings = [{
   buffer: new Buffer('13c3a9c3a1c5b1c591c3bac3b6c3bcc3b3e282ac', 'hex')
 }];
 
-test_huffman_request = {
+var test_huffman_request = {
   'GET': 'c5837f',
   'http': '9d29af',
   '/': '63',
@@ -48,7 +48,7 @@ test_huffman_request = {
   'custom-value': '25a849e95bb8e8b4bf'
 };
 
-test_huffman_response = {
+var test_huffman_response = {
   '302': '6402',
   'private': 'aec3771a4b',
   'Mon, 21 OCt 2013 20:13:21 GMT': 'd07abe941054d5792a0801654102e059b820a98b46ff',
@@ -395,29 +395,39 @@ describe('compressor.js', function() {
   describe('HuffmanTable', function() {
     describe('method encode(buffer)', function() {
       it('should return the Huffman encoded version of the input buffer', function() {
-        var table = HuffmanTable.huffmanTable;
-        for (var decoded in test_huffman_request) {
-          var encoded = test_huffman_request[decoded];
-          expect(table.encode(new Buffer(decoded)).toString('hex')).to.equal(encoded);
+        var encoded, decoded,
+          table = HuffmanTable.huffmanTable;
+        for (decoded in test_huffman_request) {
+          if (test_huffman_request.hasOwnProperty(decoded)) {
+            encoded = test_huffman_request[decoded];
+            expect(table.encode(new Buffer(decoded)).toString('hex')).to.equal(encoded);
+          }
         }
         table = HuffmanTable.huffmanTable;
         for (decoded in test_huffman_response) {
-          encoded = test_huffman_response[decoded];
-          expect(table.encode(new Buffer(decoded)).toString('hex')).to.equal(encoded);
+          if (test_huffman_response.hasOwnProperty(decoded)) {
+            encoded = test_huffman_response[decoded];
+            expect(table.encode(new Buffer(decoded)).toString('hex')).to.equal(encoded);
+          }
         }
       });
     });
     describe('method decode(buffer)', function() {
       it('should return the Huffman decoded version of the input buffer', function() {
-        var table = HuffmanTable.huffmanTable;
-        for (var decoded in test_huffman_request) {
-          var encoded = test_huffman_request[decoded];
-          expect(table.decode(new Buffer(encoded, 'hex')).toString()).to.equal(decoded);
+        var encoded, decoded,
+          table = HuffmanTable.huffmanTable;
+        for (decoded in test_huffman_request) {
+          if (test_huffman_request.hasOwnProperty(decoded)) {
+            encoded = test_huffman_request[decoded];
+            expect(table.decode(new Buffer(encoded, 'hex')).toString()).to.equal(decoded);
+          }
         }
         table = HuffmanTable.huffmanTable;
         for (decoded in test_huffman_response) {
-          encoded = test_huffman_response[decoded];
-          expect(table.decode(new Buffer(encoded, 'hex')).toString()).to.equal(decoded);
+          if (test_huffman_response.hasOwnProperty(decoded)) {
+            encoded = test_huffman_response[decoded];
+            expect(table.decode(new Buffer(encoded, 'hex')).toString()).to.equal(decoded);
+          }
         }
       });
     });
@@ -562,7 +572,7 @@ describe('compressor.js', function() {
         for (var i = 0; i < 10; i++) {
           var buffer = [];
           while (Math.random() > 0.1) {
-            buffer.push(Math.floor(Math.random() * 256))
+            buffer.push(Math.floor(Math.random() * 256));
           }
           buffer = new Buffer(buffer);
           var table = HuffmanTable.huffmanTable;
