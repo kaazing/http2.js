@@ -422,9 +422,7 @@ describe('http.js', function() {
                     host: 'localhost',
                     port: portnum,
                     path: path,
-                    createConnection: function(){
-                        return websocket('ws://localhost:' + portnum);
-                    }
+                    transport: websocket('ws://localhost:' + portnum)
                 }, function(response) {
                     response.on('data', function(data) {
                         expect(data.toString()).to.equal(message);
@@ -440,6 +438,7 @@ describe('http.js', function() {
     describe('get over plain generic transport (example WebSocket)', function() {
         it('should work as expected', function(done) {
             var path = '/x';
+            var portnum = 1239;
             var message = 'Hello world';
 
             var server = http2.raw.createServer({
@@ -461,10 +460,11 @@ describe('http.js', function() {
                 response.end(message);
             });
 
-            server.listen(1239, function() {
-                var request = http2.raw.get({path : path, createConnection: function(){
-                    return websocket('ws://localhost:' + 1239);
-                }}, function(response) {
+            server.listen(portnum, function() {
+                var request = http2.raw.get({
+                    path: path,
+                    transport: websocket('ws://localhost:' + portnum)
+                }, function(response) {
                     response.on('data', function(data) {
                         expect(data.toString()).to.equal(message);
                         server.close();
