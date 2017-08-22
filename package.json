@@ -17,6 +17,7 @@
     "events": "1.1.1"
   },
   "devDependencies": {
+    "jshint": "*",
     "istanbul": "*",
     "chai": "*",
     "mocha": "*",
@@ -25,6 +26,7 @@
     "bunyan": "*"
   },
   "scripts": {
+    "lint": "jshint lib/*.js test/*.js",
     "test": "istanbul test _mocha -- --reporter spec --slow 500 --timeout 15000",
     "doc": "docco lib/* --output doc --layout parallel --template root.jst --css doc/docco.css && docco lib/protocol/* --output doc/protocol --layout parallel --template protocol.jst --css doc/docco.css"
   },

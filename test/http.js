@@ -1,3 +1,4 @@
+/* global __dirname */
 var expect = require('chai').expect;
 var util = require('./util');
 var fs = require('fs');
@@ -34,7 +35,7 @@ describe('http.js', function() {
     describe('new Server(options)', function() {
       it('should throw if called without \'plain\' or TLS options', function() {
         expect(function() {
-          new http2.Server();
+          return new http2.Server();
         }).to.throw(Error);
         expect(function() {
           http2.createServer(util.noop);
@@ -49,7 +50,7 @@ describe('http.js', function() {
           server.close();
 
           done();
-        })
+        });
 
         server.listen(0);
       });
@@ -61,8 +62,7 @@ describe('http.js', function() {
         var net = require('net').createServer();
 
         server.on('error', function () {
-          net.close()
-
+          net.close();
           done();
         });
 
@@ -203,7 +203,7 @@ describe('http.js', function() {
       var res;
       var server = http2.createServer(serverOptions, function(request, response) {
         res = response;
-        expect(res.finished).to.be.false;
+        expect(res.finished).to.equal(false);
         response.end('HiThere');
       });
       server.listen(1236, function() {
@@ -212,7 +212,7 @@ describe('http.js', function() {
             var sink = data; //
           });
           response.on('end',function(){
-            expect(res.finished).to.be.true;
+            expect(res.finished).to.equal(true);
             server.close();
             done();
           });
@@ -380,8 +380,8 @@ describe('http.js', function() {
           request.on('response', function(response) {
             expect(response.headers[headerName]).to.equal(headerValue);
             expect(response.headers['nonexistent']).to.equal(undefined);
-            expect(response.headers['set-cookie']).to.an.instanceof(Array)
-            expect(response.headers['set-cookie']).to.deep.equal(['foo'])
+            expect(response.headers['set-cookie']).to.an.instanceof(Array);
+            expect(response.headers['set-cookie']).to.deep.equal(['foo']);
             expect(response.headers['date']).to.equal(undefined);
             response.on('data', function(data) {
               expect(data.toString()).to.equal(message);
@@ -836,7 +836,7 @@ describe('http.js', function() {
         });
 
         request.on('response', function (response) {
-          server._server._handle.destroy();
+          //server._server._handle.destroy();
 
           response.on('data', util.noop);
 
@@ -859,7 +859,7 @@ describe('http.js', function() {
         });
 
         request.on('response', function (response) {
-          server._server._handle.destroy();
+          //server._server._handle.destroy();
 
           response.on('data', util.noop);
 

@@ -80,7 +80,9 @@ function execute_sequence(stream, sequence, done) {
       if ('outgoing' in check) {
         var frame = outgoing_frames.shift();
         for (var key in check.outgoing) {
-          expect(frame).to.have.property(key).that.deep.equals(check.outgoing[key]);
+          if (check.outgoing.hasOwnProperty(key)) {
+            expect(frame).to.have.property(key).that.deep.equals(check.outgoing[key]);
+          }
         }
         count_change(frame.count_change);
       } else if ('event' in check) {
