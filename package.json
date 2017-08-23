@@ -26,7 +26,8 @@
     "bunyan": "*"
   },
   "scripts": {
-    "lint": "jshint lib/*.js test/*.js",
+    "lint": "jshint",
+    "pretest": "npm run lint",
     "test": "istanbul test _mocha -- --reporter spec --slow 500 --timeout 15000",
     "doc": "docco lib/* --output doc --layout parallel --template root.jst --css doc/docco.css && docco lib/protocol/* --output doc/protocol --layout parallel --template protocol.jst --css doc/docco.css"
   },
