@@ -9,7 +9,7 @@ client and server implementation for node.js.
 Original Source
 --------------------
 
-This version is a fork of node-http2 hosted on Github orinaly made by
+This version is a fork of node-http2 hosted on Github originally made by
 Gábor Molnár and available here: https://github.com/molnarg/node-http2
 
 This fork of `node-http2` module start at version `4.0.0` in case previous repository pick-up work on version `3.x.x`. 
