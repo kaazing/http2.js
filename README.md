@@ -4,6 +4,7 @@ node-http2
 An HTTP/2 ([RFC 7540](http://tools.ietf.org/html/rfc7540))
 client and server implementation for node.js.
 
+[![npm version](https://img.shields.io/npm/v/node-http2.svg?style=flat)](https://www.npmjs.com/package/node-http2)
 [![Build Status](https://travis-ci.org/kaazing/node-http2.svg?branch=master)](https://travis-ci.org/kaazing/node-http2)
 
 Original Source
