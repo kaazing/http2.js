@@ -5,3 +5,4 @@ doc
 .vscode/.browse*
 npm-debug.log
 typings
+builds

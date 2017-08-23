@@ -323,7 +323,7 @@ describe('framer.js', function() {
           var test = test_frames[i];
           stream.write(test.frame);
           var chunk, buffer = new Buffer(0);
-          while (chunk = stream.read()) {
+          while ((chunk = stream.read())) {
             buffer = util.concat([buffer, chunk]);
           }
           expect(buffer).to.be.deep.equal(test.buffer);

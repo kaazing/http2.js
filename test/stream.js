@@ -1,5 +1,6 @@
 var expect = require('chai').expect;
 var util = require('./util');
+var timers = require('timers');
 
 var stream = require('../lib/protocol/stream');
 var Stream = stream.Stream;
@@ -79,7 +80,9 @@ function execute_sequence(stream, sequence, done) {
       if ('outgoing' in check) {
         var frame = outgoing_frames.shift();
         for (var key in check.outgoing) {
-          expect(frame).to.have.property(key).that.deep.equals(check.outgoing[key]);
+          if (check.outgoing.hasOwnProperty(key)) {
+            expect(frame).to.have.property(key).that.deep.equals(check.outgoing[key]);
+          }
         }
         count_change(frame.count_change);
       } else if ('event' in check) {
@@ -97,7 +100,7 @@ function execute_sequence(stream, sequence, done) {
     done();
   }
 
-  setImmediate(execute.bind(null, check));
+  timers.setImmediate(execute.bind(null, check));
 }
 
 var example_frames = [

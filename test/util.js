@@ -1,3 +1,4 @@
+/* global process */
 var path = require('path');
 var fs = require('fs');
 var spawn = require('child_process').spawn;
@@ -87,3 +88,4 @@ exports.shuffleBuffers = function shuffleBuffers(buffers) {
 
   return output;
 };
+

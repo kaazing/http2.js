@@ -1,3 +1,4 @@
+/* global __dirname */
 var expect = require('chai').expect;
 var util = require('./util');
 var fs = require('fs');
@@ -7,6 +8,8 @@ var net = require('net');
 
 var http2 = require('../lib/http');
 var https = require('https');
+var http = require('http');
+var websocket = require('websocket-stream');
 
 var serverOptions = {
   key: fs.readFileSync(path.join(__dirname, '../example/localhost.key')),
@@ -32,7 +35,7 @@ describe('http.js', function() {
     describe('new Server(options)', function() {
       it('should throw if called without \'plain\' or TLS options', function() {
         expect(function() {
-          new http2.Server();
+          return new http2.Server();
         }).to.throw(Error);
         expect(function() {
           http2.createServer(util.noop);
@@ -47,7 +50,7 @@ describe('http.js', function() {
           server.close();
 
           done();
-        })
+        });
 
         server.listen(0);
       });
@@ -59,8 +62,7 @@ describe('http.js', function() {
         var net = require('net').createServer();
 
         server.on('error', function () {
-          net.close()
-
+          net.close();
           done();
         });
 
@@ -201,7 +203,7 @@ describe('http.js', function() {
       var res;
       var server = http2.createServer(serverOptions, function(request, response) {
         res = response;
-        expect(res.finished).to.be.false;
+        expect(res.finished).to.equal(false);
         response.end('HiThere');
       });
       server.listen(1236, function() {
@@ -210,7 +212,7 @@ describe('http.js', function() {
             var sink = data; //
           });
           response.on('end',function(){
-            expect(res.finished).to.be.true;
+            expect(res.finished).to.equal(true);
             server.close();
             done();
           });
@@ -378,8 +380,8 @@ describe('http.js', function() {
           request.on('response', function(response) {
             expect(response.headers[headerName]).to.equal(headerValue);
             expect(response.headers['nonexistent']).to.equal(undefined);
-            expect(response.headers['set-cookie']).to.an.instanceof(Array)
-            expect(response.headers['set-cookie']).to.deep.equal(['foo'])
+            expect(response.headers['set-cookie']).to.an.instanceof(Array);
+            expect(response.headers['set-cookie']).to.deep.equal(['foo']);
             expect(response.headers['date']).to.equal(undefined);
             response.on('data', function(data) {
               expect(data.toString()).to.equal(message);
@@ -390,6 +392,127 @@ describe('http.js', function() {
         });
       });
     });
+    describe('request over generic plain transport (example WebSocket)', function() {
+        it('should work as expected', function(done) {
+            var path = '/x';
+            var message = 'Hello world';
+            var portnum = 1239;
+
+            var server = http2.raw.createServer({
+                log: util.serverLog,
+                transport: function(options, start){
+                    var httpServer = http.createServer();
+                    options.server = httpServer;
+                    var res = websocket.createServer(options, start);
+                    res.listen = function(options, cb){
+                        httpServer.listen(options, cb);
+                    };
+                    res.close = function (cb) {
+                        httpServer.close(cb);
+                    };
+                    return res;
+                }
+            }, function(request, response) {
+                expect(request.url).to.equal(path);
+                response.end(message);
+            });
+            server.listen(portnum, function() {
+                var request = http2.raw.request({
+                    plain: true,
+                    host: 'localhost',
+                    port: portnum,
+                    path: path,
+                    transport: websocket('ws://localhost:' + portnum)
+                }, function(response) {
+                    response.on('data', function(data) {
+                        expect(data.toString()).to.equal(message);
+                        server.close();
+                        done();
+                    });
+                });
+                request.end();
+            });
+        });
+    });
+
+    describe('get over plain generic transport (example WebSocket)', function() {
+        it('should work as expected', function(done) {
+            var path = '/x';
+            var portnum = 1239;
+            var message = 'Hello world';
+
+            var server = http2.raw.createServer({
+                log: util.serverLog,
+                transport: function(options, start){
+                    var httpServer = http.createServer();
+                    options.server = httpServer;
+                    var res = websocket.createServer(options, start);
+                    res.listen = function(options, cb){
+                        httpServer.listen(options, cb);
+                    };
+                    res.close = function (cb) {
+                        httpServer.close(cb);
+                    };
+                    return res;
+                }
+            }, function(request, response) {
+                expect(request.url).to.equal(path);
+                response.end(message);
+            });
+
+            server.listen(portnum, function() {
+                var request = http2.raw.get({
+                    path: path,
+                    transport: websocket('ws://localhost:' + portnum)
+                }, function(response) {
+                    response.on('data', function(data) {
+                        expect(data.toString()).to.equal(message);
+                        server.close();
+                        done();
+                    });
+                });
+                request.end();
+            });
+        });
+    });
+      describe('get over plain generic transport (example WebSocket) 2', function() {
+          it('should work as expected', function(done) {
+              var path = '/x';
+              var message = 'Hello world';
+
+              var server = http2.raw.createServer({
+                  log: util.serverLog,
+                  transport: function(options, start){
+                      var httpServer = http.createServer();
+                      options.server = httpServer;
+                      var res = websocket.createServer(options, start);
+                      res.listen = function(options, cb){
+                          httpServer.listen(options, cb);
+                      };
+                      res.close = function (cb) {
+                          httpServer.close(cb);
+                      };
+                      return res;
+                  }
+              }, function(request, response) {
+                  expect(request.url).to.equal(path);
+                  response.end(message);
+              });
+
+              server.listen(1239, function() {
+                  var request = http2.raw.get({path : path, transport: function(){
+                      return websocket('ws://localhost:' + 1239);
+                  }}, function(response) {
+                      response.on('data', function(data) {
+                          expect(data.toString()).to.equal(message);
+                          server.close();
+                          done();
+                      });
+                  });
+                  request.end();
+              });
+          });
+      });
     describe('request over plain TCP', function() {
       it('should work as expected', function(done) {
         var path = '/x';
@@ -713,7 +836,7 @@ describe('http.js', function() {
         });
 
         request.on('response', function (response) {
-          server._server._handle.destroy();
+          //server._server._handle.destroy();
 
           response.on('data', util.noop);
 
@@ -736,7 +859,7 @@ describe('http.js', function() {
         });
 
         request.on('response', function (response) {
-          server._server._handle.destroy();
+          //server._server._handle.destroy();
 
           response.on('data', util.noop);
 

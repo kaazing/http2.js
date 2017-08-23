@@ -44,7 +44,9 @@ describe('flow.js', function() {
         flow._window = 0;
         flow._queue.push({ type: 'DATA', flags: {}, data: { length: 1 } });
         var frame = flow.read();
-        while (frame.type === notFlowControlledFrame.type) frame = flow.read();
+        while (frame.type === notFlowControlledFrame.type) {
+          frame = flow.read();
+        }
         expect(frame.type).to.equal('BLOCKED');
         expect(flow.read()).to.equal(null);
       });
