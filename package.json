@@ -26,17 +26,18 @@
     "bunyan": "*"
   },
   "scripts": {
-    "lint": "jshint lib/*.js test/*.js",
+    "lint": "jshint",
+    "pretest": "npm run lint",
     "test": "istanbul test _mocha -- --reporter spec --slow 500 --timeout 15000",
     "doc": "docco lib/* --output doc --layout parallel --template root.jst --css doc/docco.css && docco lib/protocol/* --output doc/protocol --layout parallel --template protocol.jst --css doc/docco.css"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/molnarg/node-http2.git"
+    "url": "https://github.com/kaazing/node-http2.git"
   },
-  "homepage": "https://github.com/molnarg/node-http2",
+  "homepage": "https://github.com/kaazing/node-http2",
   "bugs": {
-    "url": "https://github.com/molnarg/node-http2/issues"
+    "url": "https://github.com/kaazing/node-http2/issues"
   },
   "keywords": [
     "http",

@@ -1,5 +1,8 @@
- language: node_js
- node_js:
-   - "iojs"
-   - "0.12"
-
+language: node_js
+node_js:
+  - "4"
+  - "6"
+  - "7"
+script: mocha 
+env:
+  - COMMAND=test
