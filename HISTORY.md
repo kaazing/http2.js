@@ -5,6 +5,7 @@ Version history
 
 * Fork from abandoned https://github.com/molnarg/node-http2 to https://github.com/kaazing/node-http2 and change version to `4.0.0` to avoid confusion.
 * Bugfixes from pull requests
+    - Clean up ended streams to free leaked memory (https://github.com/molnarg/node-http2/pull/200)
     - Allow frames to send after the arrival of the RST_STREAM. (https://github.com/molnarg/node-http2/pull/210)
     - GOAWAY deserialization fix (https://github.com/molnarg/node-http2/pull/235)
     - Update Mocha link (https://github.com/molnarg/node-http2/pull/229)
