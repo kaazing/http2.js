@@ -300,7 +300,7 @@ describe('http.js', function() {
             });
           }
         });
-      }).timeout(5000);
+      }).timeout(15000);
     });
     describe('request with payload', function() {
       it('should work as expected', function(done) {
