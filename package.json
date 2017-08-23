@@ -1,6 +1,6 @@
 {
   "name": "http2",
-  "version": "3.3.6",
+  "version": "4.0.0",
   "description": "An HTTP/2 client and server implementation",
   "main": "lib/index.js",
   "engines": {
@@ -8,13 +8,13 @@
   },
   "dependencies": {
     "assert": "1.4.1",
-    "stream-browserify": "2.0.1",
-    "websocket-stream": "3.3.3",
-    "url": "0.11.0",
-    "setimmediate": "1.0.5",
+    "events": "1.1.1",
     "https-browserify": "0.0.1",
+    "setimmediate": "^1.0.5",
+    "stream-browserify": "2.0.1",
     "timers-browserify": "2.0.2",
-    "events": "1.1.1"
+    "url": "^0.11.0",
+    "websocket-stream": "^5.0.1"
   },
   "devDependencies": {
     "jshint": "*",
@@ -47,6 +47,9 @@
   ],
   "author": "Gábor Molnár <gabor@molnar.es> (http://gabor.molnar.es)",
   "contributors": [
+    "Harold Thetiot",
+    "David Witherspoon",
+    "Gábor Molnár",
     "Nick Hurley",
     "Mike Belshe",
     "Yoshihiro Iwanaga",
