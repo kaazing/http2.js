@@ -2,6 +2,8 @@ Version history
 ===============
 
 ### Fork (2017-08-23)
+
+* Fork from abandoned https://github.com/molnarg/node-http2
 * Bugfixes from pull requests
     - GOAWAY deserialization fix (https://github.com/molnarg/node-http2/pull/235)
     - Update Mocha link (https://github.com/molnarg/node-http2/pull/229)
