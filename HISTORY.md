@@ -3,10 +3,11 @@ Version history
 
 ### 4.0.0 (2017-08-23)
 
-* Rename package from `http2` to `node-http2`.
-* Fork from abandoned https://github.com/molnarg/node-http2 to https://github.com/kaazing/node-http2 and change version to `4.0.0` to avoid confusion.
+* Rename package from 'http2' to 'node-http2'.
+* Fork from abandoned https://github.com/molnarg/node-http2 to https://github.com/kaazing/node-http2 and change version to '4.0.0' to avoid confusion.
 * Bugfixes from pull requests
     - Clean up ended streams to free leaked memory (https://github.com/molnarg/node-http2/pull/200)
+    - Memory leak fix (by argon) and another 'upstream is not defined' check (https://github.com/molnarg/node-http2/pull/222)
     - Allow frames to send after the arrival of the RST_STREAM. (https://github.com/molnarg/node-http2/pull/210)
     - GOAWAY deserialization fix (https://github.com/molnarg/node-http2/pull/235)
     - Update Mocha link (https://github.com/molnarg/node-http2/pull/229)
