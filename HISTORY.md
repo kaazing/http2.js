@@ -1,14 +1,17 @@
 Version history
 ===============
 
-### Fork (2017-08-23)
+### 4.0.0 (2017-08-23)
 
-* Fork from abandoned https://github.com/molnarg/node-http2
+* Fork from abandoned https://github.com/molnarg/node-http2 to https://github.com/kaazing/node-http2 and change version to `4.0.0` to avoid confusion.
 * Bugfixes from pull requests
+    - Allow frames to send after the arrival of the RST_STREAM. (https://github.com/molnarg/node-http2/pull/210)
     - GOAWAY deserialization fix (https://github.com/molnarg/node-http2/pull/235)
     - Update Mocha link (https://github.com/molnarg/node-http2/pull/229)
     - Remove invalid assert (https://github.com/molnarg/node-http2/pull/236)
     - Typo: finshed (https://github.com/molnarg/node-http2/pull/199)
+    - JSHINT all source (https://github.com/dpwspoon/node-http2/pull/4)
+    - Changed API to be fully pluggable for any transport or server (https://github.com/dpwspoon/node-http2/pull/2)
 
 ### 3.3.6 (2016-09-16) ###
 * We were not appropriately sending HPACK context updates when receiving SETTINGS_HEADER_TABLE_SIZE. This release fixes that bug.
