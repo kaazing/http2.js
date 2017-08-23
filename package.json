@@ -32,11 +32,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/molnarg/node-http2.git"
+    "url": "https://github.com/kaazing/node-http2.git"
   },
-  "homepage": "https://github.com/molnarg/node-http2",
+  "homepage": "https://github.com/kaazing/node-http2",
   "bugs": {
-    "url": "https://github.com/molnarg/node-http2/issues"
+    "url": "https://github.com/kaazing/node-http2/issues"
   },
   "keywords": [
     "http",

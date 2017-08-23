@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/kaazing/node-http2.svg?branch=master)](https://travis-ci.org/kaazing/node-http2)
+
 node-http2
 ==========
 
