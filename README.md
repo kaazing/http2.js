@@ -6,12 +6,19 @@ client and server implementation for node.js.
 
 [![Build Status](https://travis-ci.org/kaazing/node-http2.svg?branch=master)](https://travis-ci.org/kaazing/node-http2)
 
+Original Source
+--------------------
+
+This version is a fork of node-http2 hosted on Github orinaly made by
+Gábor Molnár and available here: https://github.com/molnarg/node-http2
+
+This fork of `node-http2` module start at version `4.0.0` in case previous repository pick-up work on version `3.x.x`. 
 
 Installation
 ------------
 
 ```
-npm install http2
+npm install node-http2
 ```
 
 API
@@ -21,7 +28,7 @@ The API is very similar to the [standard node.js HTTPS API](http://nodejs.org/ap
 goal is the perfect API compatibility, with additional HTTP2 related extensions (like server push).
 
 Detailed API documentation is primarily maintained in the `lib/http.js` file and is [available in
-the wiki](https://github.com/molnarg/node-http2/wiki/Public-API) as well.
+the wiki](https://github.com/kaazing/node-http2/wiki/Public-API) as well.
 
 Examples
 --------
@@ -67,8 +74,8 @@ $ node ./example/client.js 'https://localhost:8080/server.js' >/tmp/server.js
 ### Server push ###
 
 For a server push example, see the source code of the example
-[server](https://github.com/molnarg/node-http2/blob/master/example/server.js) and
-[client](https://github.com/molnarg/node-http2/blob/master/example/client.js).
+[server](https://github.com/kaazing/node-http2/blob/master/example/server.js) and
+[client](https://github.com/kaazing/node-http2/blob/master/example/client.js).
 
 Status
 ------
@@ -77,7 +84,7 @@ Status
 * Upgrade mechanism to start HTTP/2 over unencrypted channel is not implemented yet
   (issue [#4](https://github.com/molnarg/node-http2/issues/4))
 * Other minor features found in
-  [this list](https://github.com/molnarg/node-http2/issues?labels=feature) are not implemented yet
+  [this list](https://github.com/kaazing/node-http2/issues?labels=feature) are not implemented yet
 
 Development
 -----------
@@ -114,10 +121,10 @@ point to understand the code.
 To generate a code coverage report, run `npm test --coverage` (which runs very slowly, be patient).
 Code coverage summary as of version 3.0.1:
 ```
-Statements   : 92.09% ( 1759/1910 )
-Branches     : 82.56% ( 696/843 )
-Functions    : 91.38% ( 212/232 )
-Lines        : 92.17% ( 1753/1902 )
+Statements   : 89.44% ( 1947/2177 )
+Branches     : 79.45% ( 816/1027 )
+Functions    : 89.06% ( 228/256 )
+Lines        : 89.53% ( 1941/2168 )
 ```
 
 There's a hosted version of the detailed (line-by-line) coverage report
