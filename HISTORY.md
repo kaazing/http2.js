@@ -1,6 +1,13 @@
 Version history
 ===============
 
+### Fork (2017-08-23)
+* Bugfixes from pull requests
+    - GOAWAY deserialization fix (https://github.com/molnarg/node-http2/pull/235)
+    - Update Mocha link (https://github.com/molnarg/node-http2/pull/229)
+    - Remove invalid assert (https://github.com/molnarg/node-http2/pull/236)
+    - Typo: finshed (https://github.com/molnarg/node-http2/pull/199)
+
 ### 3.3.6 (2016-09-16) ###
 * We were not appropriately sending HPACK context updates when receiving SETTINGS_HEADER_TABLE_SIZE. This release fixes that bug.
 
