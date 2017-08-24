@@ -1,6 +1,6 @@
 {
-  "name": "node-http2",
-  "version": "4.0.1",
+  "name": "http2.js",
+  "version": "4.0.0",
   "description": "An HTTP/2 client and server implementation",
   "main": "lib/index.js",
   "engines": {
@@ -33,11 +33,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/kaazing/node-http2.git"
+    "url": "https://github.com/kaazing/http2.js.git"
   },
-  "homepage": "https://github.com/kaazing/node-http2",
+  "homepage": "https://github.com/kaazing/http2.js",
   "bugs": {
-    "url": "https://github.com/kaazing/node-http2/issues"
+    "url": "https://github.com/kaazing/http2.js/issues"
   },
   "keywords": [
     "http",
