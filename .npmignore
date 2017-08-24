@@ -1,2 +1,11 @@
+coverage
 test
 .travis.yml
+.git
+node_modules
+.idea
+coverage
+.vscode/.browse*
+npm-debug.log
+typings
+builds
