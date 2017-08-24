@@ -1,25 +1,26 @@
-node-http2
+http2.js
 ==========
 
 An HTTP/2 ([RFC 7540](http://tools.ietf.org/html/rfc7540))
-client and server implementation for node.js.
+pure JavaScript client and server implementation for node.js.
 
-[![npm version](https://img.shields.io/npm/v/node-http2.svg?style=flat)](https://www.npmjs.com/package/node-http2)
-[![Build Status](https://travis-ci.org/kaazing/node-http2.svg?branch=master)](https://travis-ci.org/kaazing/node-http2)
+[![npm version](https://img.shields.io/npm/v/http2.js.svg?style=flat)](https://www.npmjs.com/package/http2.js)
+[![Build Status](https://travis-ci.org/kaazing/http2.js.svg?branch=master)](https://travis-ci.org/kaazing/http2.js)
 
-Original Source
+Original Source and Fork intent
 --------------------
 
-This version is a fork of node-http2 hosted on Github originally made by
-Gábor Molnár and available here: https://github.com/molnarg/node-http2
+This NodeJS `http2.js` module version is a fork of `node-http2` hosted on Github originally made by Gábor Molnár and available here: https://github.com/molnarg/node-http2
 
-This fork of `node-http2` module start at version `4.0.0` in case previous repository pick-up work on version `3.x.x`. 
+This fork of `node-http2` module named `http2.js` start at version `4.0.0` in case previous repository pick-up work on version `3.x.x`. 
+
+We are aware that node 8.4.0 now has experimental `http2` support behind a `--expose-http2`, we will continue to this support `http2.js` full JavaScript implementation for some time until many various client platforms offer full http2 support at our discretion. 
 
 Installation
 ------------
 
 ```
-npm install node-http2
+npm install http2.js
 ```
 
 API
@@ -29,7 +30,7 @@ The API is very similar to the [standard node.js HTTPS API](http://nodejs.org/ap
 goal is the perfect API compatibility, with additional HTTP2 related extensions (like server push).
 
 Detailed API documentation is primarily maintained in the `lib/http.js` file and is [available in
-the wiki](https://github.com/kaazing/node-http2/wiki/Public-API) as well.
+the wiki](https://github.com/kaazing/http2.js/wiki/Public-API) as well.
 
 Examples
 --------
@@ -75,8 +76,8 @@ $ node ./example/client.js 'https://localhost:8080/server.js' >/tmp/server.js
 ### Server push ###
 
 For a server push example, see the source code of the example
-[server](https://github.com/kaazing/node-http2/blob/master/example/server.js) and
-[client](https://github.com/kaazing/node-http2/blob/master/example/client.js).
+[server](https://github.com/kaazing/http2.js/blob/master/example/server.js) and
+[client](https://github.com/kaazing/http2.js/blob/master/example/client.js).
 
 Status
 ------
@@ -85,7 +86,7 @@ Status
 * Upgrade mechanism to start HTTP/2 over unencrypted channel is not implemented yet
   (issue [#4](https://github.com/molnarg/node-http2/issues/4))
 * Other minor features found in
-  [this list](https://github.com/kaazing/node-http2/issues?labels=feature) are not implemented yet
+  [this list](https://github.com/kaazing/http2.js/issues?labels=feature) are not implemented yet
 
 Development
 -----------
@@ -157,7 +158,7 @@ Contributors
 
 The co-maintainer of the project is [Nick Hurley](https://github.com/todesschaf).
 
-Code contributions are always welcome! People who contributed to node-http2 so far:
+Code contributions are always welcome! People who contributed to `node-http2` and `http2.js` so far:
 
 * [Nick Hurley](https://github.com/todesschaf)
 * [Mike Belshe](https://github.com/mbelshe)
