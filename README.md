@@ -12,9 +12,9 @@ Original Source and Fork intent
 
 This NodeJS `http2.js` module version is a fork of `node-http2` hosted on Github originally made by Gábor Molnár and available here: https://github.com/molnarg/node-http2
 
-This fork of `node-http2` module named `http2.js` start at version `4.0.0` in case previous repository pick-up work on version `3.x.x`. 
+This fork of `node-http2` module named `http2.js` *starts* at version `4.0.0` in case previous *the* repository decides to pick up work again on version `3.x.x`. 
 
-We are aware that node 8.4.0 now has experimental `http2` support behind a `--expose-http2`, we will continue to this support `http2.js` full JavaScript implementation for some time until many various client platforms offer full http2 support at our discretion. 
+We are aware that node 8.4.0 now has experimental `http2` support via `--expose-http2`, and we will continue to support the full JavaScript implementation of `http2.js` at our discretion until HTTP/2 is more fully supported in a broad range of client platforms.
 
 Installation
 ------------
