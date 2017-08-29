@@ -724,6 +724,7 @@ describe('http.js', function() {
             host: 'localhost',
             port: 1259,
             path: '/',
+            method: 'POST',
             ca: serverOptions.cert
           });
           request.write('Ping');
