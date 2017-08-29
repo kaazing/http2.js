@@ -6,24 +6,14 @@
   "engines": {
     "node": ">=0.12.0"
   },
-  "dependencies": {
-    "assert": "1.4.1",
-    "events": "1.1.1",
-    "https-browserify": "0.0.1",
-    "setimmediate": "^1.0.5",
-    "stream-browserify": "2.0.1",
-    "timers-browserify": "2.0.2",
-    "url": "^0.11.0",
-    "websocket-stream": "^5.0.1"
-  },
   "devDependencies": {
-    "jshint": "*",
-    "istanbul": "*",
+    "bunyan": "^2.0.2",
     "chai": "*",
-    "mocha": "*",
     "docco": "*",
-    "browserify": "14.0.0 ",
-    "bunyan": "*"
+    "istanbul": "*",
+    "jshint": "*",
+    "mocha": "*",
+    "websocket-stream": "^5.0.1"
   },
   "scripts": {
     "lint": "jshint",
