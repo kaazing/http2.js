@@ -11,7 +11,7 @@ if (process.env.HTTP2_LOG) {
   if (process.stderr.isTTY) {
     var bin = path.resolve(path.dirname(require.resolve('bunyan')), '..', 'bin', 'bunyan');
     if(bin && fs.existsSync(bin)) {
-      logOutput = spawn(bin, ['-o', 'short'], {
+      logOutput = spawn(process.execPath, [bin, '-o', 'short'], {
         stdio: [null, process.stderr, process.stderr]
       }).stdin;
     }
@@ -89,3 +89,8 @@ exports.shuffleBuffers = function shuffleBuffers(buffers) {
   return output;
 };
 
+// Error message were changed in https://github.com/nodejs/node/commit/2141d374527337f7e1c74c9efad217b017d945cf
+exports.uncaughtErrorEventMessage =
+  +(process.versions.node.split('.')[0]) >= 8
+    ? 'Unhandled "error" event.'
+    : 'Uncaught, unspecified "error" event.'
