@@ -300,7 +300,7 @@ describe('http.js', function() {
             });
           }
         });
-      }).timeout(15000);
+      });
     });
     describe('request with payload', function() {
       it('should work as expected', function(done) {
@@ -393,126 +393,126 @@ describe('http.js', function() {
       });
     });
     describe('request over generic plain transport (example WebSocket)', function() {
-        it('should work as expected', function(done) {
-            var path = '/x';
-            var message = 'Hello world';
-            var portnum = 1239;
+      it('should work as expected', function(done) {
+        var path = '/x';
+        var message = 'Hello world';
+        var portnum = 1239;
 
-            var server = http2.raw.createServer({
-                log: util.serverLog,
-                transport: function(options, start){
-                    var httpServer = http.createServer();
-                    options.server = httpServer;
-                    var res = websocket.createServer(options, start);
-                    res.listen = function(options, cb){
-                        httpServer.listen(options, cb);
-                    };
-                    res.close = function (cb) {
-                        httpServer.close(cb);
-                    };
-                    return res;
-                }
-            }, function(request, response) {
-                expect(request.url).to.equal(path);
-                response.end(message);
-            });
-            server.listen(portnum, function() {
-                var request = http2.raw.request({
-                    plain: true,
-                    host: 'localhost',
-                    port: portnum,
-                    path: path,
-                    transport: websocket('ws://localhost:' + portnum)
-                }, function(response) {
-                    response.on('data', function(data) {
-                        expect(data.toString()).to.equal(message);
-                        server.close();
-                        done();
-                    });
-                });
-                request.end();
-            });
+        var server = http2.raw.createServer({
+          log: util.serverLog,
+          transport: function(options, start){
+            var httpServer = http.createServer();
+            options.server = httpServer;
+            var res = websocket.createServer(options, start);
+            res.listen = function(options, cb){
+              httpServer.listen(options, cb);
+            };
+            res.close = function (cb) {
+              httpServer.close(cb);
+            };
+            return res;
+          }
+        }, function(request, response) {
+          expect(request.url).to.equal(path);
+          response.end(message);
         });
+        server.listen(portnum, function() {
+          var request = http2.raw.request({
+            plain: true,
+            host: 'localhost',
+            port: portnum,
+            path: path,
+            transport: websocket('ws://localhost:' + portnum)
+          }, function(response) {
+            response.on('data', function(data) {
+              expect(data.toString()).to.equal(message);
+              server.close();
+              done();
+            });
+          });
+          request.end();
+        });
+      });
     });
 
     describe('get over plain generic transport (example WebSocket)', function() {
-        it('should work as expected', function(done) {
-            var path = '/x';
-            var portnum = 1239;
-            var message = 'Hello world';
+      it('should work as expected', function(done) {
+        var path = '/x';
+        var portnum = 1239;
+        var message = 'Hello world';
 
-            var server = http2.raw.createServer({
-                log: util.serverLog,
-                transport: function(options, start){
-                    var httpServer = http.createServer();
-                    options.server = httpServer;
-                    var res = websocket.createServer(options, start);
-                    res.listen = function(options, cb){
-                        httpServer.listen(options, cb);
-                    };
-                    res.close = function (cb) {
-                        httpServer.close(cb);
-                    };
-                    return res;
-                }
-            }, function(request, response) {
-                expect(request.url).to.equal(path);
-                response.end(message);
-            });
-
-            server.listen(portnum, function() {
-                var request = http2.raw.get({
-                    path: path,
-                    transport: websocket('ws://localhost:' + portnum)
-                }, function(response) {
-                    response.on('data', function(data) {
-                        expect(data.toString()).to.equal(message);
-                        server.close();
-                        done();
-                    });
-                });
-                request.end();
-            });
+        var server = http2.raw.createServer({
+          log: util.serverLog,
+          transport: function(options, start){
+            var httpServer = http.createServer();
+            options.server = httpServer;
+            var res = websocket.createServer(options, start);
+            res.listen = function(options, cb){
+              httpServer.listen(options, cb);
+            };
+            res.close = function (cb) {
+              httpServer.close(cb);
+            };
+            return res;
+          }
+        }, function(request, response) {
+          expect(request.url).to.equal(path);
+          response.end(message);
         });
-    });
-      describe('get over plain generic transport (example WebSocket) 2', function() {
-          it('should work as expected', function(done) {
-              var path = '/x';
-              var message = 'Hello world';
 
-              var server = http2.raw.createServer({
-                  log: util.serverLog,
-                  transport: function(options, start){
-                      var httpServer = http.createServer();
-                      options.server = httpServer;
-                      var res = websocket.createServer(options, start);
-                      res.listen = function(options, cb){
-                          httpServer.listen(options, cb);
-                      };
-                      res.close = function (cb) {
-                          httpServer.close(cb);
-                      };
-                      return res;
-                  }
-              }, function(request, response) {
-                  expect(request.url).to.equal(path);
-                  response.end(message);
-              });
-
-              server.listen(1239, function() {
-                  var request = http2.raw.get({path : path, transport: function(){
-                      return websocket('ws://localhost:' + 1239);
-                  }}, function(response) {
-                      response.on('data', function(data) {
-                          expect(data.toString()).to.equal(message);
-                          server.close();
-                          done();
-                      });
-                  });
-                  request.end();
-              });
+        server.listen(portnum, function() {
+          var request = http2.raw.get({
+            path: path,
+            transport: websocket('ws://localhost:' + portnum)
+          }, function(response) {
+            response.on('data', function(data) {
+              expect(data.toString()).to.equal(message);
+              server.close();
+              done();
+            });
           });
+          request.end();
+        });
       });
+    });
+    describe('get over plain generic transport (example WebSocket) 2', function() {
+      it('should work as expected', function(done) {
+        var path = '/x';
+        var message = 'Hello world';
+
+        var server = http2.raw.createServer({
+          log: util.serverLog,
+          transport: function(options, start){
+            var httpServer = http.createServer();
+            options.server = httpServer;
+            var res = websocket.createServer(options, start);
+            res.listen = function(options, cb){
+              httpServer.listen(options, cb);
+            };
+            res.close = function (cb) {
+              httpServer.close(cb);
+            };
+            return res;
+          }
+        }, function(request, response) {
+          expect(request.url).to.equal(path);
+          response.end(message);
+        });
+
+        server.listen(1239, function() {
+          var request = http2.raw.get({path: path, transport: function() {
+              return websocket('ws://localhost:' + 1239);
+          }}, function(response) {
+            response.on('data', function(data) {
+              expect(data.toString()).to.equal(message);
+              server.close();
+              done();
+            });
+          });
+          request.end();
+        });
+      });
+    });
     describe('request over plain TCP', function() {
       it('should work as expected', function(done) {
         var path = '/x';
@@ -724,6 +724,7 @@ describe('http.js', function() {
             host: 'localhost',
             port: 1259,
             path: '/',
+            method: 'POST',
             ca: serverOptions.cert
           });
           request.write('Ping');

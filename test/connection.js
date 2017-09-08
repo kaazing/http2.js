@@ -52,7 +52,7 @@ describe('connection.js', function() {
           do {
             newPriority = randomPriority();
           } while(newPriority === oldPriority);
-          
+
           stream = { _priority: oldPriority };
           connection._insert(stream, oldPriority);
           connection._reprioritize(stream, newPriority);
