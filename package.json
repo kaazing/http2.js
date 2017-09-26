@@ -51,6 +51,7 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "dependencies": {
-    "object.assign": "^4.0.4"
+    "object.assign": "^4.0.4",
+    "timers-browserify": "^2.0.4"
   }
 }
