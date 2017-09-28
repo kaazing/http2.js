@@ -51,6 +51,7 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "dependencies": {
+    "object-keys": "^1.0.11",
     "object.assign": "^4.0.4",
     "setimmediate": "^1.0.5"
   }
