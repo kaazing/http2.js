@@ -1,6 +1,13 @@
 Version history
 ===============
 
+### 4.0.1 (2017-10-01)
+
+* Bugfixes from pull requests
+    - Fails to load in IE11 due to timers.setImmediate call
+    - Fix Node 5+ support #4 bug
+    - update object-keys module for Object.keys shim 
+
 ### 4.0.0 (2017-08-23)
 
 * Rename package from 'http2' to 'http2.js'.
