@@ -119,7 +119,12 @@ describe('http.js', function() {
         var server = http2.createServer(serverOptions, function (request, response) {
           expect(request.url).to.equal(path);
           response.setHeader('content-encoding', 'gzip');
-          response.end(compressedMessage);
+            var from1 = Buffer.from(compressedMessage, 0, 15);
+            response.write(from1);
+            response.write(Buffer.from(compressedMessage, 0, 0));
+            var from2 = Buffer.from(compressedMessage, 15);
+            response.write(from2);
+          response.end();
         });
 
         server.listen(1234, function () {
