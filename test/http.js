@@ -10,7 +10,6 @@ var http2 = require('../lib/http');
 var https = require('https');
 var http = require('http');
 var websocket = require('websocket-stream');
-var pako = require('pako');
 
 var serverOptions = {
   key: fs.readFileSync(path.join(__dirname, '../example/localhost.key')),
@@ -108,62 +107,31 @@ describe('http.js', function() {
       });
     });
     describe('method `request(options, [callback])`', function() {
-        it('should use a new agent for request-specific TLS settings', function (done) {
-            var path = '/x';
-            var message = 'Hello world';
+      it('should use a new agent for request-specific TLS settings', function(done) {
+        var path = '/x';
+        var message = 'Hello world';
 
-            var server = http2.createServer(serverOptions, function (request, response) {
-                expect(request.url).to.equal(path);
-                response.end(message);
-            });
-
-            server.listen(1234, function () {
-                var options = url.parse('https://localhost:1234' + path);
-                options.key = agentOptions.key;
-                options.ca = agentOptions.ca;
-                options.rejectUnauthorized = true;
-
-                http2.globalAgent = new http2.Agent({log: util.clientLog});
-                http2.get(options, function (response) {
-                    response.on('data', function (data) {
-                        expect(data.toString()).to.equal(message);
-                        server.close();
-                        done();
-                    });
-                });
-            });
+        var server = http2.createServer(serverOptions, function(request, response) {
+          expect(request.url).to.equal(path);
+          response.end(message);
         });
-    });
-      describe('method `request(options, [callback])`', function() {
-        // DPW TODO
-        it('DPW TODO', function(done) {
-          var path = '/x';
-          var message = 'Hello world';
 
-          var compressedMessage = pako.gzip(message);
-          compressedMessage = Buffer.from(compressedMessage.buffer);
-          var server = http2.createServer(serverOptions, function(request, response) {
-            expect(request.url).to.equal(path);
+        server.listen(1234, function() {
+          var options = url.parse('https://localhost:1234' + path);
+          options.key = agentOptions.key;
+          options.ca = agentOptions.ca;
+          options.rejectUnauthorized = true;
 
-            response.end(compressedMessage);
-          });
-
-          server.listen(1234, function() {
-            var options = url.parse('https://localhost:1234' + path);
-            options.key = agentOptions.key;
-            options.ca = agentOptions.ca;
-            options.rejectUnauthorized = true;
-
-            http2.globalAgent = new http2.Agent({ log: util.clientLog });
-            http2.get(options, function(response) {
-              response.on('data', function(data) {
-                expect(data.toString()).to.equal(message);
-                server.close();
-                done();
-              });
+          http2.globalAgent = new http2.Agent({ log: util.clientLog });
+          http2.get(options, function(response) {
+            response.on('data', function(data) {
+              expect(data.toString()).to.equal(message);
+              server.close();
+              done();
             });
           });
         });
+      });
       it('should throw when trying to use with \'http\' scheme', function() {
         expect(function() {
           var agent = new http2.Agent({ log: util.clientLog });
