@@ -118,6 +118,7 @@ describe('http.js', function() {
         compressedMessage = Buffer.from(compressedMessage.buffer);
         var server = http2.createServer(serverOptions, function (request, response) {
           expect(request.url).to.equal(path);
+          response.setHeader('content-encoding', 'gzip');
           response.end(compressedMessage);
         });
 
