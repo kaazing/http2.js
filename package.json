@@ -8,17 +8,17 @@
   },
   "devDependencies": {
     "bunyan": "^2.0.2",
-    "chai": "*",
-    "docco": "*",
-    "istanbul": "*",
-    "jshint": "*",
-    "mocha": "*",
+    "chai": "^4.1.2",
+    "docco": "^0.7.0",
+    "istanbul": "^0.4.5",
+    "jshint": "^2.9.5",
+    "mocha": "^4.0.1",
     "websocket-stream": "^5.0.1"
   },
   "scripts": {
     "lint": "jshint",
     "pretest": "npm run lint",
-    "test": "istanbul test node_modules/mocha/bin/_mocha -- --reporter spec --slow 500 --timeout 15000",
+    "test": "istanbul test node_modules/mocha/bin/_mocha -- --reporter spec --slow 500 --timeout 15000 --exit",
     "doc": "docco lib/* --output doc --layout parallel --template root.jst --css doc/docco.css && docco lib/protocol/* --output doc/protocol --layout parallel --template protocol.jst --css doc/docco.css"
   },
   "repository": {
