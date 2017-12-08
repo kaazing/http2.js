@@ -109,8 +109,7 @@ describe('http.js', function() {
     });
 
     describe('should accept-encoding gzip', function() {
-      // DPW TODO
-      it('DPW TODO', function (done) {
+      it('does a request and gets a response with gzip encoding', function (done) {
         var path = '/x';
         var message = 'Hello world';
 
@@ -119,11 +118,11 @@ describe('http.js', function() {
         var server = http2.createServer(serverOptions, function (request, response) {
           expect(request.url).to.equal(path);
           response.setHeader('content-encoding', 'gzip');
-            var from1 = Buffer.from(compressedMessage, 0, 15);
-            response.write(from1);
+            var chunk1 = Buffer.from(compressedMessage, 0, 15);
+            response.write(chunk1);
             response.write(Buffer.from(compressedMessage, 0, 0));
-            var from2 = Buffer.from(compressedMessage, 15);
-            response.write(from2);
+            var chunk2 = Buffer.from(compressedMessage, 15);
+            response.write(chunk2);
           response.end();
         });
 
