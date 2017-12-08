@@ -96,6 +96,43 @@ describe('http.js', function() {
       });
     });
   });
+
+  describe('should accept-encoding gzip', function() {
+      it('does a request and gets a response with gzip encoding', function (done) {
+          var path = '/x';
+          var message = 'Hello world';
+
+          var compressedMessage = pako.gzip(message);
+          compressedMessage = Buffer.from(compressedMessage.buffer);
+          var server = http2.createServer(serverOptions, function (request, response) {
+              expect(request.url).to.equal(path);
+              response.setHeader('content-encoding', 'gzip');
+              var chunk1 = Buffer.from(compressedMessage, 0, 15);
+              response.write(chunk1);
+              response.write(Buffer.from(compressedMessage, 0, 0));
+              var chunk2 = Buffer.from(compressedMessage, 15);
+              response.write(chunk2);
+              response.end();
+          });
+
+          server.listen(1244, function () {
+              var options = url.parse('https://localhost:1244' + path);
+              options.key = agentOptions.key;
+              options.ca = agentOptions.ca;
+              options.rejectUnauthorized = true;
+
+              http2.globalAgent = new http2.Agent({log: util.clientLog});
+              http2.get(options, function (response) {
+                  response.on('data', function (data) {
+                      expect(data.toString()).to.equal(message);
+                      server.close();
+                      done();
+                  });
+              });
+          });
+      });
+  });
+
   describe('Agent', function() {
     describe('property `maxSockets`', function() {
       it('should be a proxy for the backing HTTPS agent\'s `maxSockets` property', function() {
@@ -105,42 +142,6 @@ describe('http.js', function() {
         agent.maxSockets = newMaxSockets;
         expect(agent.maxSockets).to.be.equal(newMaxSockets);
         expect(backingAgent.maxSockets).to.be.equal(newMaxSockets);
-      });
-    });
-
-    describe('should accept-encoding gzip', function() {
-      it('does a request and gets a response with gzip encoding', function (done) {
-        var path = '/x';
-        var message = 'Hello world';
-
-        var compressedMessage = pako.gzip(message);
-        compressedMessage = Buffer.from(compressedMessage.buffer);
-        var server = http2.createServer(serverOptions, function (request, response) {
-          expect(request.url).to.equal(path);
-          response.setHeader('content-encoding', 'gzip');
-            var chunk1 = Buffer.from(compressedMessage, 0, 15);
-            response.write(chunk1);
-            response.write(Buffer.from(compressedMessage, 0, 0));
-            var chunk2 = Buffer.from(compressedMessage, 15);
-            response.write(chunk2);
-          response.end();
-        });
-
-        server.listen(1234, function () {
-          var options = url.parse('https://localhost:1234' + path);
-          options.key = agentOptions.key;
-          options.ca = agentOptions.ca;
-          options.rejectUnauthorized = true;
-
-          http2.globalAgent = new http2.Agent({log: util.clientLog});
-          http2.get(options, function (response) {
-            response.on('data', function (data) {
-              expect(data.toString()).to.equal(message);
-              server.close();
-              done();
-            });
-          });
-         });
       });
     });
 
