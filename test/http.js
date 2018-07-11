@@ -153,7 +153,7 @@ describe('http.js', function() {
               expect(request.url).to.equal(path);
               response.setHeader('content-encoding', 'gzip');
               response.setHeader('retry-after', retryAfterDelay);
-              response.writeHead(502);
+              response.writeHead(503);
               response.write(compressedErrorMessage);
               response.end();
           });
@@ -166,7 +166,8 @@ describe('http.js', function() {
 
               http2.globalAgent = new http2.Agent({log: util.clientLog});
               http2.get(options, function (response) {
-                
+
+                  expect(response.statusCode).to.equal(503);
                   expect(response.getHeader('retry-after')).to.equal(String(retryAfterDelay));
                   
                   response.on('data', function (data) {
