@@ -312,20 +312,26 @@ describe('http.js', function() {
       });
     });
 
-    it('does a request and gets a response for statusCode 503 with `retry-after` = 0 header', function (done) {
+    it('does a request and gets a response statusCode 200 with `retry-after` = 0 header in seconds and statusCode 503', function (done) {
       var path = '/retry-later';
       var errorMessage = 'Service is NOT available';
+      var message = 'Hello Dave I\'m back';
 
+      var nbRequest = 0;
       var server = http2.createServer(serverOptions, function (request, response) {
-        var requestDate = Date.now();
+          nbRequest++;
           expect(request.url).to.equal(path);
 
           // DEBUG:
           //console.log('request', request.url, requestDate, restartDate, requestDate < restartDate);
-
-          response.setHeader('retry-after', 0);
-          response.writeHead(503);
-          response.write(errorMessage);
+          if (nbRequest === 1) {
+            response.setHeader('retry-after', 0);
+            response.writeHead(503);
+            response.write(errorMessage); 
+          } else {
+            response.writeHead(200);
+            response.write(message);
+          }
           response.end(); 
       });
 
@@ -341,11 +347,12 @@ describe('http.js', function() {
               // DEBUG:
               //console.log('response', response.statusCode);
               
-              expect(response.statusCode).to.equal(503);
+              expect(response.statusCode).to.equal(200);
               
               response.on('data', function (data) {
                   // TODO
-                  expect(data.toString()).to.equal(errorMessage);
+                  expect(nbRequest).to.equal(2);
+                  expect(data.toString()).to.equal(message);
               });
 
               response.on('end',function(){
