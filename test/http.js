@@ -112,6 +112,7 @@ describe('http.js', function() {
           var message = 'Hello world';
 
           var compressedMessage = pako.gzip(message);
+
           compressedMessage = Buffer.from(compressedMessage.buffer);
           var server = http2.createServer(serverOptions, function (request, response) {
               expect(request.url).to.equal(path);
@@ -212,186 +213,332 @@ describe('http.js', function() {
 
   describe('should handle retry-after on statusCode 503', function () {
 
-      it('does a request and gets a response with `retry-after` header in seconds and statusCode 503', function (done) {
-          var retryAfterDelay = 5;
-          var retryAfterDelayMs = retryAfterDelay * 1000;
-          var restartDate = (Date.now() + retryAfterDelayMs);
+    it('does a request and gets a response for statusCode 503 without `retry-after` header', function (done) {
+      var path = '/retry-later';
+      var errorMessage = 'Service is NOT available';
 
-          var path = '/retry-later';
-          var errorMessage = 'Service is NOT available';
-          var message = 'Hello Dave I\'m back';
+      var server = http2.createServer(serverOptions, function (request, response) {
+        var requestDate = Date.now();
+          expect(request.url).to.equal(path);
 
-          var server = http2.createServer(serverOptions, function (request, response) {
-            var requestDate = Date.now();
-              expect(request.url).to.equal(path);
+          // DEBUG:
+          //console.log('request', request.url, requestDate, restartDate, requestDate < restartDate);
 
-              // DEBUG:
-              //console.log('request', request.url, requestDate, restartDate, requestDate < restartDate);
+          response.writeHead(503);
+          response.write(errorMessage);
+          response.end(); 
+      });
 
-              if (requestDate <= restartDate) {
-                response.setHeader('retry-after', retryAfterDelay);
-                response.writeHead(503);
-                response.write(errorMessage);
-                response.end(); 
-              } else {
-                response.writeHead(200);
-                response.write(message);
-                response.end(); 
-              }
-          });
+      server.listen(1244, function () {
+          var options = url.parse('https://localhost:1244' + path);
+          options.key = agentOptions.key;
+          options.ca = agentOptions.ca;
+          options.rejectUnauthorized = true;
 
-          server.listen(1244, function () {
-              var options = url.parse('https://localhost:1244' + path);
-              options.key = agentOptions.key;
-              options.ca = agentOptions.ca;
-              options.rejectUnauthorized = true;
-
-              http2.globalAgent = new http2.Agent({log: util.clientLog});
-              http2.get(options, function (response) {
-
-                  // DEBUG:
-                  //console.log('response', response.statusCode);
-                  
-                  expect(response.statusCode).to.equal(200);
-                  
-                  response.on('data', function (data) {
-                      // TODO
-                      expect(data.toString()).to.equal(message);
-                  });
-
-                  response.on('end',function(){
-                    // WHY finished undefined ?
-                    //expect(response.finished).to.equal(true);
-                    server.close();
-                    done();
-                  });
-              });
-          });
-      }).timeout(10000);
-
-      it('does a request and gets a response with `retry-after` header using date and statusCode 503', function (done) {
-          var retryAfterDelay = 5;
-          var retryAfterDelayMs = retryAfterDelay * 1000;
-          var restartDate = (Date.now() + retryAfterDelayMs);
-
-          var path = '/retry-later';
-          var errorMessage = 'Service is NOT available';
-          var message = 'Hello Dave I\'m back';
-
-          var server = http2.createServer(serverOptions, function (request, response) {
-            var requestDate = Date.now();
-              expect(request.url).to.equal(path);
+          http2.globalAgent = new http2.Agent({log: util.clientLog});
+          http2.get(options, function (response) {
 
               // DEBUG:
-              //console.log('request', request.url, requestDate, restartDate, requestDate < restartDate);
+              //console.log('response', response.statusCode);
+              
+              expect(response.statusCode).to.equal(503);
+              
+              response.on('data', function (data) {
+                  // TODO
+                  expect(data.toString()).to.equal(errorMessage);
+              });
 
-              if (requestDate <= restartDate) {
-                response.setHeader('retry-after', new Date(restartDate));
-                response.writeHead(503);
-                response.write(errorMessage);
-                response.end(); 
-              } else {
-                response.writeHead(200);
-                response.write(message);
-                response.end(); 
-              }
-          });
-
-          server.listen(1244, function () {
-              var options = url.parse('https://localhost:1244' + path);
-              options.key = agentOptions.key;
-              options.ca = agentOptions.ca;
-              options.rejectUnauthorized = true;
-
-              http2.globalAgent = new http2.Agent({log: util.clientLog});
-              http2.get(options, function (response) {
-
-                  // DEBUG:
-                  //console.log('response', response.statusCode);
-                  
-                  expect(response.statusCode).to.equal(200);
-                  
-                  response.on('data', function (data) {
-                      // TODO
-                      expect(data.toString()).to.equal(message);
-                  });
-
-                  response.on('end',function(){
-                    // WHY finished undefined ?
-                    //expect(response.finished).to.equal(true);
-                    server.close();
-                    done();
-                  });
+              response.on('end',function(){
+                // WHY finished undefined ?
+                //expect(response.finished).to.equal(true);
+                server.close();
+                done();
               });
           });
-      }).timeout(10000);
+      });
+    });
 
-      it('does a request and gets a response with `retry-after` header and statusCode 503 with gzip encoding', function (done) {
-          var retryAfterDelay = 5;
-          var retryAfterDelayMs = retryAfterDelay * 1000;
-          var restartDate = (Date.now() + retryAfterDelayMs);
+    it('does a request and gets a response for statusCode 503 without `retry-after` header with gzip encoding', function (done) {
+      var path = '/retry-later';
+      var errorMessage = 'Service is NOT available';
 
-          var path = '/retry-later';
-          var errorMessage = 'Service is NOT available';
-          var message = 'Hello Dave I\'m back';
+      var compressedErrorMessage = pako.gzip(errorMessage);
+      compressedErrorMessage = Buffer.from(compressedErrorMessage.buffer);
 
-          var compressedErrorMessage = pako.gzip(errorMessage);
-          compressedErrorMessage = Buffer.from(compressedErrorMessage.buffer);
+      var server = http2.createServer(serverOptions, function (request, response) {
+        var requestDate = Date.now();
+          expect(request.url).to.equal(path);
 
-          var compressedMessage = pako.gzip(message);
-          compressedMessage = Buffer.from(compressedMessage.buffer);
+          // DEBUG:
+          //console.log('request', request.url, requestDate, restartDate, requestDate < restartDate);
+          response.setHeader('content-encoding', 'gzip');
+          response.writeHead(503);
 
-          var server = http2.createServer(serverOptions, function (request, response) {
-            var requestDate = Date.now();
-              expect(request.url).to.equal(path);
-              response.setHeader('content-encoding', 'gzip');
+          var chunk1 = Buffer.from(compressedErrorMessage, 0, 15);
+          response.write(chunk1);
+          response.write(Buffer.from(compressedErrorMessage, 0, 0));
+          var chunk2 = Buffer.from(compressedErrorMessage, 15);
+          response.write(chunk2);
+          response.end();
+
+      });
+
+      server.listen(1244, function () {
+          var options = url.parse('https://localhost:1244' + path);
+          options.key = agentOptions.key;
+          options.ca = agentOptions.ca;
+          options.rejectUnauthorized = true;
+
+          http2.globalAgent = new http2.Agent({log: util.clientLog});
+          http2.get(options, function (response) {
 
               // DEBUG:
-              //console.log('request', request.url, requestDate, restartDate, requestDate < restartDate);
-              var responseMessage, compressedResponseMessage;
-              if (requestDate <= restartDate) {
-                response.setHeader('retry-after', retryAfterDelay);
-                response.writeHead(503);
-                responseMessage = errorMessage;
-                compressedResponseMessage = compressedErrorMessage;
-              } else {
-                response.writeHead(200);
-                responseMessage = message;
-                compressedResponseMessage = compressedMessage;
-              }
+              //console.log('response', response.statusCode);
+              
+              expect(response.statusCode).to.equal(503);
+              
+              response.on('data', function (data) {
+                  // TODO
+                  expect(data.toString()).to.equal(errorMessage);
+              });
 
-              var chunk1 = Buffer.from(responseMessage, 0, 15);
-              response.write(chunk1);
-              response.write(Buffer.from(compressedResponseMessage, 0, 0));
-              var chunk2 = Buffer.from(compressedResponseMessage, 15);
-              response.write(chunk2);
-              response.end();
-          });
-
-          server.listen(1244, function () {
-              var options = url.parse('https://localhost:1244' + path);
-              options.key = agentOptions.key;
-              options.ca = agentOptions.ca;
-              options.rejectUnauthorized = true;
-
-              http2.globalAgent = new http2.Agent({log: util.clientLog});
-              http2.get(options, function (response) {
-
-                  expect(response.statusCode).to.equal(200);
-                  
-                  response.on('data', function (data) {
-                      expect(data.toString()).to.equal(message);
-                  });
-
-                  response.on('end',function(){
-                    // WHY finished undefined ?
-                    //expect(response.finished).to.equal(true);
-                    server.close();
-                    done();
-                  });
+              response.on('end',function(){
+                // WHY finished undefined ?
+                //expect(response.finished).to.equal(true);
+                server.close();
+                done();
               });
           });
-      }).timeout(10000);
+      });
+    });
+
+    it('does a request and gets a response for statusCode 503 with `retry-after` = 0 header', function (done) {
+      var path = '/retry-later';
+      var errorMessage = 'Service is NOT available';
+
+      var server = http2.createServer(serverOptions, function (request, response) {
+        var requestDate = Date.now();
+          expect(request.url).to.equal(path);
+
+          // DEBUG:
+          //console.log('request', request.url, requestDate, restartDate, requestDate < restartDate);
+
+          response.setHeader('retry-after', 0);
+          response.writeHead(503);
+          response.write(errorMessage);
+          response.end(); 
+      });
+
+      server.listen(1244, function () {
+          var options = url.parse('https://localhost:1244' + path);
+          options.key = agentOptions.key;
+          options.ca = agentOptions.ca;
+          options.rejectUnauthorized = true;
+
+          http2.globalAgent = new http2.Agent({log: util.clientLog});
+          http2.get(options, function (response) {
+
+              // DEBUG:
+              //console.log('response', response.statusCode);
+              
+              expect(response.statusCode).to.equal(503);
+              
+              response.on('data', function (data) {
+                  // TODO
+                  expect(data.toString()).to.equal(errorMessage);
+              });
+
+              response.on('end',function(){
+                // WHY finished undefined ?
+                //expect(response.finished).to.equal(true);
+                server.close();
+                done();
+              });
+          });
+      });
+    });
+
+    it('does a request and gets a response statusCode 200 with `retry-after` header in seconds and statusCode 503', function (done) {
+      var retryAfterDelay = 5;
+      var retryAfterDelayMs = retryAfterDelay * 1000;
+      var restartDate = (Date.now() + retryAfterDelayMs);
+
+      var path = '/retry-later';
+      var errorMessage = 'Service is NOT available';
+      var message = 'Hello Dave I\'m back';
+
+      var server = http2.createServer(serverOptions, function (request, response) {
+          var requestDate = Date.now();
+          expect(request.url).to.equal(path);
+
+          // DEBUG:
+          //console.log('request', request.url, requestDate, restartDate, requestDate < restartDate);
+
+          if (requestDate < restartDate) {
+            response.setHeader('retry-after', retryAfterDelay);
+            response.writeHead(503);
+            response.write(errorMessage);
+            response.end(); 
+          } else {
+            response.writeHead(200);
+            response.write(message);
+            response.end(); 
+          }
+      });
+
+      server.listen(1244, function () {
+          var options = url.parse('https://localhost:1244' + path);
+          options.key = agentOptions.key;
+          options.ca = agentOptions.ca;
+          options.rejectUnauthorized = true;
+
+          http2.globalAgent = new http2.Agent({log: util.clientLog});
+          http2.get(options, function (response) {
+
+              // DEBUG:
+              //console.log('response', response.statusCode);
+              
+              expect(response.statusCode).to.equal(200);
+              
+              response.on('data', function (data) {
+                  // TODO
+                  expect(data.toString()).to.equal(message);
+              });
+
+              response.on('end',function(){
+                // WHY finished undefined ?
+                //expect(response.finished).to.equal(true);
+                server.close();
+                done();
+              });
+          });
+      });
+    }).timeout(10000);
+
+    it('does a request and gets a response statusCode 200 with `retry-after` header using date and statusCode 503', function (done) {
+      var retryAfterDelay = 5;
+      var retryAfterDelayMs = retryAfterDelay * 1000;
+      var restartDate = (Date.now() + retryAfterDelayMs);
+
+      var path = '/retry-later';
+      var errorMessage = 'Service is NOT available';
+      var message = 'Hello Dave I\'m back';
+
+      var server = http2.createServer(serverOptions, function (request, response) {
+        var requestDate = Date.now();
+          expect(request.url).to.equal(path);
+
+          // DEBUG:
+          //console.log('request', request.url, requestDate, restartDate, restartDate - requestDate, requestDate < restartDate);
+
+          if (requestDate < restartDate) {
+            response.setHeader('retry-after', new Date(restartDate));
+            response.writeHead(503);
+            response.write(errorMessage);
+            response.end(); 
+          } else {
+            response.writeHead(200);
+            response.write(message);
+            response.end(); 
+          }
+      });
+
+      server.listen(1244, function () {
+          var options = url.parse('https://localhost:1244' + path);
+          options.key = agentOptions.key;
+          options.ca = agentOptions.ca;
+          options.rejectUnauthorized = true;
+
+          http2.globalAgent = new http2.Agent({log: util.clientLog});
+          http2.get(options, function (response) {
+
+              // DEBUG:
+              //console.log('response', response.statusCode);
+              
+              expect(response.statusCode).to.equal(200);
+              
+              response.on('data', function (data) {
+                  // TODO
+                  expect(data.toString()).to.equal(message);
+              });
+
+              response.on('end',function(){
+                // WHY finished undefined ?
+                //expect(response.finished).to.equal(true);
+                server.close();
+                done();
+              });
+          });
+      });
+    }).timeout(10000);
+
+    xit('does a request and gets a response statusCode 200 with `retry-after` header and statusCode 503 with gzip encoding', function (done) {
+      var retryAfterDelay = 5;
+      //retryAfterDelay = 0;
+      var retryAfterDelayMs = retryAfterDelay * 1000;
+      var restartDate = (Date.now() + retryAfterDelayMs);
+
+      var path = '/retry-later';
+      var errorMessage = 'Service is NOT available';
+      var message = 'Hello Dave I\'m back';
+
+      var compressedErrorMessage = pako.gzip(errorMessage);
+      compressedErrorMessage = Buffer.from(compressedErrorMessage.buffer);
+
+      var compressedMessage = pako.gzip(message);
+      compressedMessage = Buffer.from(compressedMessage.buffer);
+
+      var server = http2.createServer(serverOptions, function (request, response) {
+        var requestDate = Date.now();
+          expect(request.url).to.equal(path);
+          response.setHeader('content-encoding', 'gzip');
+
+          // DEBUG:
+          //console.log('request', request.url, requestDate, restartDate, requestDate < restartDate);
+          var responseMessage, compressedResponseMessage;
+          if (requestDate < restartDate) {
+            response.setHeader('retry-after', retryAfterDelay);
+            response.writeHead(503);
+            responseMessage = errorMessage;
+            compressedResponseMessage = compressedErrorMessage;
+          } else {
+            response.writeHead(200);
+            responseMessage = message;
+            compressedResponseMessage = compressedMessage;
+          }
+
+          var chunk1 = Buffer.from(responseMessage, 0, 15);
+          response.write(chunk1);
+          response.write(Buffer.from(compressedResponseMessage, 0, 0));
+          var chunk2 = Buffer.from(compressedResponseMessage, 15);
+          response.write(chunk2);
+          response.end();
+      });
+
+      server.listen(1244, function () {
+          var options = url.parse('https://localhost:1244' + path);
+          options.key = agentOptions.key;
+          options.ca = agentOptions.ca;
+          options.rejectUnauthorized = true;
+
+          http2.globalAgent = new http2.Agent({log: util.clientLog});
+          http2.get(options, function (response) {
+
+              expect(response.statusCode).to.equal(200);
+              
+              response.on('data', function (data) {
+                  expect(data.toString()).to.equal(message);
+              });
+
+              response.on('end',function(){
+                // WHY finished undefined ?
+                //expect(response.finished).to.equal(true);
+                server.close();
+                done();
+              });
+          });
+      });
+    }).timeout(10000);
   });
 
   describe('Agent', function() {
