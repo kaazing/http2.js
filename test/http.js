@@ -212,7 +212,7 @@ describe('http.js', function() {
 
   describe('should handle retry-after on statusCode 503', function () {
 
-      it('does a request and gets a response with `retry-after` header in seconds  and statusCode 503', function (done) {
+      it('does a request and gets a response with `retry-after` header in seconds and statusCode 503', function (done) {
           var retryAfterDelay = 5;
           var retryAfterDelayMs = retryAfterDelay * 1000;
           var restartDate = (Date.now() + retryAfterDelayMs);
@@ -220,16 +220,10 @@ describe('http.js', function() {
           var path = '/retry-later';
           var errorMessage = 'Service is NOT available';
           var message = 'Hello Dave I\'m back';
-          var compressedErrorMessage = pako.gzip(errorMessage);
-          compressedErrorMessage = Buffer.from(compressedErrorMessage.buffer);
-
-          var compressedMessage = pako.gzip(message);
-          compressedMessage = Buffer.from(compressedMessage.buffer);
 
           var server = http2.createServer(serverOptions, function (request, response) {
             var requestDate = Date.now();
               expect(request.url).to.equal(path);
-              //response.setHeader('content-encoding', 'gzip');
 
               // DEBUG:
               //console.log('request', request.url, requestDate, restartDate, requestDate < restartDate);
@@ -275,7 +269,7 @@ describe('http.js', function() {
           });
       }).timeout(10000);
 
-      xit('does a request and gets a response with `retry-after` header using date and statusCode 503', function (done) {
+      it('does a request and gets a response with `retry-after` header using date and statusCode 503', function (done) {
           var retryAfterDelay = 5;
           var retryAfterDelayMs = retryAfterDelay * 1000;
           var restartDate = (Date.now() + retryAfterDelayMs);
@@ -283,16 +277,10 @@ describe('http.js', function() {
           var path = '/retry-later';
           var errorMessage = 'Service is NOT available';
           var message = 'Hello Dave I\'m back';
-          var compressedErrorMessage = pako.gzip(errorMessage);
-          compressedErrorMessage = Buffer.from(compressedErrorMessage.buffer);
-
-          var compressedMessage = pako.gzip(message);
-          compressedMessage = Buffer.from(compressedMessage.buffer);
 
           var server = http2.createServer(serverOptions, function (request, response) {
             var requestDate = Date.now();
               expect(request.url).to.equal(path);
-              //response.setHeader('content-encoding', 'gzip');
 
               // DEBUG:
               //console.log('request', request.url, requestDate, restartDate, requestDate < restartDate);
@@ -346,6 +334,7 @@ describe('http.js', function() {
           var path = '/retry-later';
           var errorMessage = 'Service is NOT available';
           var message = 'Hello Dave I\'m back';
+
           var compressedErrorMessage = pako.gzip(errorMessage);
           compressedErrorMessage = Buffer.from(compressedErrorMessage.buffer);
 
@@ -359,17 +348,25 @@ describe('http.js', function() {
 
               // DEBUG:
               //console.log('request', request.url, requestDate, restartDate, requestDate < restartDate);
-
+              var responseMessage, compressedResponseMessage;
               if (requestDate <= restartDate) {
                 response.setHeader('retry-after', retryAfterDelay);
                 response.writeHead(503);
-                response.write(compressedErrorMessage);
-                response.end(); 
+                responseMessage = errorMessage;
+                compressedResponseMessage = compressedErrorMessage;
               } else {
                 response.writeHead(200);
-                response.write(compressedMessage);
-                response.end(); 
+                responseMessage = message;
+                compressedResponseMessage = compressedMessage;
               }
+
+
+              var chunk1 = Buffer.from(responseMessage, 0, 15);
+              response.write(chunk1);
+              response.write(Buffer.from(compressedResponseMessage, 0, 0));
+              var chunk2 = Buffer.from(compressedResponseMessage, 15);
+              response.write(chunk2);
+              response.end();
           });
 
           server.listen(1244, function () {
