@@ -326,7 +326,7 @@ describe('http.js', function() {
           });
       }).timeout(10000);
 
-      xit('does a request and gets a response with `retry-after` header and statusCode 503 with gzip encoding', function (done) {
+      it('does a request and gets a response with `retry-after` header and statusCode 503 with gzip encoding', function (done) {
           var retryAfterDelay = 5;
           var retryAfterDelayMs = retryAfterDelay * 1000;
           var restartDate = (Date.now() + retryAfterDelayMs);
@@ -359,7 +359,6 @@ describe('http.js', function() {
                 responseMessage = message;
                 compressedResponseMessage = compressedMessage;
               }
-
 
               var chunk1 = Buffer.from(responseMessage, 0, 15);
               response.write(chunk1);
