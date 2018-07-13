@@ -123,10 +123,10 @@ point to understand the code.
 To generate a code coverage report, run `npm test --coverage` (which runs very slowly, be patient).
 Code coverage summary as of version 3.0.1:
 ```
-Statements   : 89.44% ( 1947/2177 )
-Branches     : 79.45% ( 816/1027 )
-Functions    : 89.06% ( 228/256 )
-Lines        : 89.53% ( 1941/2168 )
+Statements   : 89.47% ( 1980/2213 )
+Branches     : 79.03% ( 829/1049 )
+Functions    : 89.27% ( 233/261 )
+Lines        : 89.61% ( 1974/2203 )
 ```
 
 There's a hosted version of the detailed (line-by-line) coverage report
@@ -160,6 +160,8 @@ The co-maintainer of the project is [Nick Hurley](https://github.com/todesschaf)
 
 Code contributions are always welcome! People who contributed to `node-http2` and `http2.js` so far:
 
+* [Kaazing](https://github.com/kaazing)
+* [Nick Hurley](https://github.com/todesschaf)
 * [Nick Hurley](https://github.com/todesschaf)
 * [Mike Belshe](https://github.com/mbelshe)
 * [Yoshihiro Iwanaga](https://github.com/iwanaga)
