@@ -552,7 +552,7 @@ describe('http.js', function() {
       });
     }).timeout(10000);
 
-    xit('does a request and gets a response statusCode 200 with `retry-after` header and statusCode 503 with gzip encoding', function (done) {
+    it('does a request and gets a response statusCode 200 with `retry-after` header and statusCode 503 with gzip encoding', function (done) {
       var retryAfterDelay = 5;
       //retryAfterDelay = 0;
       var retryAfterDelayMs = retryAfterDelay * 1000;
