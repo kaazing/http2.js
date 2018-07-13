@@ -482,6 +482,76 @@ describe('http.js', function() {
       });
     }).timeout(10000);
 
+    it('does a request and gets a response statusCode 200 with `retry-after` header using date and statusCode 503 using POST', function (done) {
+      var retryAfterDelay = 5;
+      var retryAfterDelayMs = retryAfterDelay * 1000;
+      var restartDate = (Date.now() + retryAfterDelayMs);
+
+      var path = '/retry-later';
+      var errorMessage = 'Service is NOT available';
+      var message = 'Hello Dave I\'m back';
+
+      var server = http2.createServer(serverOptions, function (request, response) {
+        var requestDate = Date.now();
+          expect(request.url).to.equal(path);
+          expect(request.method).to.equal('POST');
+          expect(request.headers["content-type"]).to.equal("text/plain");
+
+          var body = [];
+          request.on('data', function(chunk) {
+            body.push(chunk);
+          }).on('end', function() {
+            // at this point, `body` has the entire request body stored in it as a string
+            expect(Buffer.concat(body).toString()).to.equal(message);
+          });
+
+          // DEBUG:
+          //console.log('request', request.url, requestDate, restartDate, restartDate - requestDate, requestDate < restartDate);
+
+          if (requestDate < restartDate) {
+            response.setHeader('retry-after', new Date(restartDate));
+            response.writeHead(503);
+            response.write(errorMessage);
+            response.end(); 
+          } else {
+            response.writeHead(200);
+            response.write(message);
+            response.end(); 
+          }
+      });
+
+      server.listen(1244, function () {
+          var options = url.parse('https://localhost:1244' + path);
+          options.key = agentOptions.key;
+          options.ca = agentOptions.ca;
+          options.method = 'POST';
+          options.rejectUnauthorized = true;
+          options.headers = {
+            "Content-Type": "text/plain"
+          };
+
+          http2.globalAgent = new http2.Agent({log: util.clientLog});
+          http2.post(options, message, function (response) {
+
+              // DEBUG:
+              //console.log('response', response.statusCode);
+              expect(response.statusCode).to.equal(200);
+              
+              response.on('data', function (data) {
+                  // TODO
+                  expect(data.toString()).to.equal(message);
+              });
+
+              response.on('end',function(){
+                // WHY finished undefined ?
+                //expect(response.finished).to.equal(true);
+                server.close();
+                done();
+              });
+          });
+      });
+    }).timeout(10000);
+
     xit('does a request and gets a response statusCode 200 with `retry-after` header and statusCode 503 with gzip encoding', function (done) {
       var retryAfterDelay = 5;
       //retryAfterDelay = 0;
