@@ -176,7 +176,7 @@ describe('http.js', function() {
           });
       });
 
-      xit('does a request and gets a response with gzip encoding for response larger than MAX_PAYLOAD_SIZE', function (done) {
+      it('does a request and gets a response with gzip encoding for response larger than MAX_PAYLOAD_SIZE', function (done) {
           var path = '/x';
           // TODO validate this test is not false positive or memory limit
           // use larger than MAX_PAYLOAD_SIZE > 3 make that test fail
