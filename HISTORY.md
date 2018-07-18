@@ -1,6 +1,16 @@
 Version history
 ===============
 
+### 4.0.3 (2018-07-18)
+
+* Update http.js to add support on request for `retry-after` header on `503|429|302` status code. 
+
+    [About 503]
+        The server returns an HTTP error 503 when more users than are allowed by the server's request queue limit have sent requests to a single server or when the actions of the client have triggered throttling.
+        
+    [Retry-After](https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.37)
+         If a Retry-After header ([RFC2616]) is present in the response, the client SHOULD<6> retry the request after waiting the number of seconds indicated by the Retry-After header. Any such value represents an estimate of when the server is expected to be able to process the request.
+
 ### 4.0.1 (2017-10-01)
 
 * Bugfixes from pull requests
