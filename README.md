@@ -124,9 +124,9 @@ To generate a code coverage report, run `npm test --coverage` (which runs very s
 Code coverage summary as of version 4.0.2:
 ```
 Statements   : 89.41% ( 2017/2256 )
-Branches     : 78.96% ( 848/1074 )
+Branches     : 79.33% ( 852/1074 )
 Functions    : 89.47% ( 238/266 )
-Lines        : 89.54% ( 2011/2246 )
+Lines        : 89.45% ( 2009/2246 )
 ```
 
 There's a hosted version of the detailed (line-by-line) coverage report
