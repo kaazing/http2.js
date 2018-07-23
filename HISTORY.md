@@ -1,7 +1,7 @@
 Version history
 ===============
 
-### 4.0.3 (2018-07-18)
+### 4.0.3 (2018-07-18) ###
 
 * Update http.js to add support on request for `retry-after` header on `503|429|302` status code. 
 
@@ -11,14 +11,14 @@ Version history
     [Retry-After](https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.37)
          If a Retry-After header ([RFC2616]) is present in the response, the client SHOULD<6> retry the request after waiting the number of seconds indicated by the Retry-After header. Any such value represents an estimate of when the server is expected to be able to process the request.
 
-### 4.0.1 (2017-10-01)
+### 4.0.1 (2017-10-01) ###
 
 * Bugfixes from pull requests
     - Fails to load in IE11 due to timers.setImmediate call
     - Fix Node 5+ support #4 bug
     - update object-keys module for Object.keys shim 
 
-### 4.0.0 (2017-08-23)
+### 4.0.0 (2017-08-23) ###
 
 * Rename package from 'http2' to 'http2.js'.
 * Fork from abandoned https://github.com/molnarg/node-http2 to https://github.com/kaazing/http2.js and change version to '4.0.0' to avoid confusion.
@@ -32,6 +32,9 @@ Version history
     - Typo: finshed (https://github.com/molnarg/node-http2/pull/199)
     - JSHINT all source (https://github.com/dpwspoon/node-http2/pull/4)
     - Changed API to be fully pluggable for any transport or server (https://github.com/dpwspoon/node-http2/pull/2)
+    
+### 3.3.8 (2018-02-15) ###
+* Fix an issue with HTTP trailers and END_STREAM.
 
 ### 3.3.6 (2016-09-16) ###
 * We were not appropriately sending HPACK context updates when receiving SETTINGS_HEADER_TABLE_SIZE. This release fixes that bug.
