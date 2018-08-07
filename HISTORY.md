@@ -1,6 +1,9 @@
 Version history
 ===============
 
+### 4.0.4 (2018-08-07)
+* Fix http.js support on request for `retry-after` bad timer delay computation. 
+
 ### 4.0.3 (2018-07-18)
 
 * Update http.js to add support on request for `retry-after` header on `503|429|302` status code. 
