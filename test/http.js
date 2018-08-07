@@ -369,7 +369,7 @@ describe('http.js', function() {
     });
 
     it('does a request and gets a response statusCode 200 with `retry-after` header in seconds and statusCode 503', function (done) {
-      var retryAfterDelay = 5;
+      var retryAfterDelay = 0.5; // 500ms
       var retryAfterDelayMs = retryAfterDelay * 1000;
       var restartDate = (Date.now() + retryAfterDelayMs);
 
@@ -423,7 +423,7 @@ describe('http.js', function() {
               });
           });
       });
-    }).timeout(10000);
+    }).timeout(1000);
 
     it('does a request and gets a response statusCode 200 with `retry-after` header using date and statusCode 503', function (done) {
       var retryAfterDelay = 5;
@@ -480,7 +480,7 @@ describe('http.js', function() {
               });
           });
       });
-    }).timeout(10000);
+    }).timeout(6000);
 
     it('does a request and gets a response statusCode 200 with `retry-after` header using date and statusCode 503 using POST', function (done) {
       var retryAfterDelay = 5;
@@ -550,7 +550,7 @@ describe('http.js', function() {
               });
           });
       });
-    }).timeout(10000);
+    }).timeout(6000);
 
     it('does a request and gets a response statusCode 200 with `retry-after` header and statusCode 503 with gzip encoding', function (done) {
       var retryAfterDelay = 5;
@@ -618,7 +618,7 @@ describe('http.js', function() {
               });
           });
       });
-    }).timeout(10000);
+    }).timeout(6000);
   });
 
   describe('Agent', function() {
