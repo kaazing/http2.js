@@ -52,6 +52,8 @@ describe('connection.js', function() {
             SETTINGS_MAX_CONCURRENT_STREAMS: 666
           });
           expect(connection._streamLimit).to.equal(666);
+          expect(connection._streamSlotsFree).to.equal(666);
+          
         });
         it('should set custom SETTINGS_INITIAL_WINDOW_SIZE and update initial stream window size', function() {
           var connection = new Connection(util.log, 1, {
