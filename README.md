@@ -115,18 +115,17 @@ The developer documentation is generated from the source code using docco and ca
 
 ### Running the tests ###
 
-It's easy, just run `npm test`. The tests are written in BDD style, so they are a good starting
-point to understand the code.
+It's easy, just run `npm test`. The tests are written in BDD style, so they are a good starting point to understand the code.
 
 ### Test coverage ###
 
 To generate a code coverage report, run `npm test --coverage` (which runs very slowly, be patient).
-Code coverage summary as of version 4.0.2:
+Code coverage summary as of version 4.0.5:
 ```
-Statements   : 89.41% ( 2017/2256 )
-Branches     : 79.33% ( 852/1074 )
-Functions    : 89.47% ( 238/266 )
-Lines        : 89.45% ( 2009/2246 )
+Statements   : 89.51% ( 2031/2269 )
+Branches     : 79.72% ( 861/1080 )
+Functions    : 89.89% ( 240/267 )
+Lines        : 89.55% ( 2023/2259 )
 ```
 
 There's a hosted version of the detailed (line-by-line) coverage report
