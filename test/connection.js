@@ -40,6 +40,35 @@ describe('connection.js', function() {
         expectPriorityOrder(connection._streamPriorities);
       });
     });
+    describe('connection creation', function() {
+      describe('custom settings', function() {
+        it('should use Connection.defaultSettings when no settings provided', function() {
+          var connection = new Connection(util.log, 1);
+          expect(connection._streamLimit).to.equal(Connection.defaultSettings.SETTINGS_MAX_CONCURRENT_STREAMS);
+          expect(connection._initialStreamWindowSize).to.equal(Connection.defaultSettings.SETTINGS_INITIAL_WINDOW_SIZE);
+        });
+        it('should set custom SETTINGS_MAX_CONCURRENT_STREAMS and update stream limit', function() {
+          var connection = new Connection(util.log, 1, {
+            SETTINGS_MAX_CONCURRENT_STREAMS: 666
+          });
+          expect(connection._streamLimit).to.equal(666);
+          expect(connection._streamSlotsFree).to.equal(666);
+          
+        });
+        it('should set custom SETTINGS_INITIAL_WINDOW_SIZE and update initial stream window size', function() {
+          var connection = new Connection(util.log, 1, {
+            SETTINGS_INITIAL_WINDOW_SIZE: 666
+          });
+          expect(connection._initialStreamWindowSize).to.equal(666);
+        });
+        it('should set custom SETTINGS_MAX_FRAME_SIZE and update initial max frame size', function() {
+          // Should not triggger erro
+          var connection = new Connection(util.log, 1, {
+            SETTINGS_MAX_FRAME_SIZE: 0x00100000
+          });
+        });
+      });
+    });
     describe('method ._reprioritize(stream)', function() {
       it('should eject and then insert the stream in _streamPriorities in a place determined by stream._priority', function() {
         var streams = [];

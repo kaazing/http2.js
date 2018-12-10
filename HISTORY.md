@@ -1,6 +1,10 @@
 Version history
 ===============
 
+### 4.0.5 (2018-12-05)
+
+* Fix Connection SETTINGS_MAX_CONCURRENT_STREAMS settings on creation #24 (via #26)
+
 ### 4.0.4 (2018-08-07)
 * Fix http.js support on request for `retry-after` bad timer delay computation. 
 
