@@ -799,7 +799,7 @@ describe('http.js', function() {
         });
       });
     });
-    describe('2 simple request in parallel shoudl fail if SETTINGS_MAX_CONCURRENT_STREAMS=1', function() {
+    describe('2 simple request in parallel should fail if SETTINGS_MAX_CONCURRENT_STREAMS=1', function() {
       it('should work as expected', function(originalDone) {
         var path = '/x';
         var message = 'Hello world';
