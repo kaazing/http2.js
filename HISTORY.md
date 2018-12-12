@@ -1,6 +1,10 @@
 Version history
 ===============
 
+### 4.0.6 (2018-12-11)
+
+* Remove default SETTINGS_MAX_CONCURRENT_STREAMS value. By default, the number of concurrent outbound streams is not limited.
+
 ### 4.0.5 (2018-12-10)
 
 * Fix Connection SETTINGS_MAX_CONCURRENT_STREAMS settings on creation #24 (via #26)
