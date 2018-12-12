@@ -44,7 +44,7 @@ describe('connection.js', function() {
       describe('custom settings', function() {
         it('should use Connection.defaultSettings when no settings provided', function() {
           var connection = new Connection(util.log, 1);
-          expect(connection._streamLimit).to.equal(Connection.defaultSettings.SETTINGS_MAX_CONCURRENT_STREAMS);
+          expect(connection._streamLimit).to.equal(Infinity);
           expect(connection._initialStreamWindowSize).to.equal(Connection.defaultSettings.SETTINGS_INITIAL_WINDOW_SIZE);
         });
         it('should set custom SETTINGS_MAX_CONCURRENT_STREAMS and update stream limit', function() {
