@@ -799,6 +799,47 @@ describe('http.js', function() {
         });
       });
     });
+    describe('2 simple request in parallel should fail if SETTINGS_MAX_CONCURRENT_STREAMS=1', function() {
+      it('should work as expected', function(originalDone) {
+        var path = '/x';
+        var message = 'Hello world';
+        var done = util.callNTimes(2, function() {
+          server.close();
+          originalDone();
+        });
+
+        var server = http2.createServer(serverOptions, function(request, response) {
+          expect(request.url).to.equal(path);
+          response.end(message);
+        });
+
+        http2.globalAgent = new http2.Agent(Object.assign({
+          log: util.clientLog,
+          settings: {
+            SETTINGS_MAX_CONCURRENT_STREAMS: 1
+          }
+        }, agentOptions));
+
+        var start = Date.now();
+
+        server.listen(1234, function() {
+          http2.get('https://localhost:1234' + path, function(response) {
+            response.on('data', function(data) {
+              expect(data.toString()).to.equal(message);
+              done();
+            });
+          });
+          http2.get('https://localhost:1234' + path, function(response) {
+            // TODO assert and expect queueing on globalAgent->Endpoint->Connection
+            response.on('data', function(data) {
+              console.log(Date.now() - start);
+              expect(data.toString()).to.equal(message);
+              done();
+            });
+          });
+        });
+      });
+    });
     describe('100 simple request in a series', function() {
       it('should work as expected', function(done) {
         var path = '/x';
